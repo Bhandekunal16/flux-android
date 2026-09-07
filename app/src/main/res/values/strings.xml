@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Flux</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_video">Video</string>
+    <string name="nav_genres">Genres</string>
+    <string name="nav_movies">Movies</string>
+    <string name="nav_wishlist">Wishlist</string>
+    <string name="nav_search">Search</string>
+    <string name="search_placeholder">Search songs, artists, videos…</string>
+    <string name="trending_music">Trending Music</string>
+    <string name="trending_videos">Trending Videos</string>
+    <string name="movie_trailers">Movie Trailers</string>
+    <string name="music_genres">Explore Genres</string>
+    <string name="my_wishlist">My Wishlist</string>
+    <string name="action_listen">Listen</string>
+    <string name="action_watch">Watch</string>
+    <string name="action_play">Play</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_next">Next</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_login">Sign In</string>
+    <string name="action_logout">Sign Out</string>
+    <string name="login_title">Welcome to Flux</string>
+    <string name="login_subtitle">Enter your email to sync your music wishlist across devices</string>
+    <string name="email_hint">your.email@example.com</string>
+    <string name="sign_in_button">Sign In with Email</string>
+    <string name="empty_wishlist">Your wishlist is empty</string>
+    <string name="empty_wishlist_desc">Tap the heart icon on any music track or video to save it here.</string>
+    <string name="empty_search">No music found</string>
+    <string name="empty_search_desc">Try searching with different song titles or artist names.</string>
+    <string name="load_more">Load More</string>
+    <string name="theme_settings">Theme &amp; Appearance</string>
+</resources>
