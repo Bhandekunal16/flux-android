@@ -20,48 +20,48 @@ import com.flux.android.presentation.video.VideoViewModel
 import com.flux.android.presentation.wishlist.WishlistViewModel
 
 class MainActivity : ComponentActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
-    val app = application as FluxApplication
-    val container = app.appContainer
+        val app = application as FluxApplication
+        val container = app.appContainer
 
-    setContent {
-      val themeViewModel = remember { ThemeViewModel(container.themePreferences) }
-      val themeConfig by themeViewModel.themeConfig.collectAsState()
+        setContent {
+            val themeViewModel = remember { ThemeViewModel(container.themePreferences) }
+            val themeConfig by themeViewModel.themeConfig.collectAsState()
 
-      val homeViewModel = remember { HomeViewModel(container.fluxRepository) }
-      val videoViewModel = remember { VideoViewModel(container.fluxRepository) }
-      val genreViewModel = remember { GenreViewModel(container.fluxRepository) }
-      val moviesViewModel = remember { MoviesViewModel(container.fluxRepository) }
-      val wishlistViewModel = remember {
-        WishlistViewModel(container.fluxRepository, container.authRepository)
-      }
-      val searchViewModel = remember { SearchViewModel(container.fluxRepository) }
-      val authViewModel = remember { AuthViewModel(container.authRepository) }
+            val homeViewModel = remember { HomeViewModel(container.fluxRepository) }
+            val videoViewModel = remember { VideoViewModel(container.fluxRepository) }
+            val genreViewModel = remember { GenreViewModel(container.fluxRepository) }
+            val moviesViewModel = remember { MoviesViewModel(container.fluxRepository) }
+            val wishlistViewModel =
+                remember {
+                    WishlistViewModel(container.fluxRepository, container.authRepository)
+                }
+            val searchViewModel = remember { SearchViewModel(container.fluxRepository) }
+            val authViewModel = remember { AuthViewModel(container.authRepository) }
 
-      FluxTheme(
-        mode = themeConfig.mode,
-        accent = themeConfig.accent
-      ) {
-        FluxMainNavigation(
-          homeViewModel = homeViewModel,
-          videoViewModel = videoViewModel,
-          genreViewModel = genreViewModel,
-          moviesViewModel = moviesViewModel,
-          wishlistViewModel = wishlistViewModel,
-          searchViewModel = searchViewModel,
-          authViewModel = authViewModel,
-          themeViewModel = themeViewModel,
-          playerManager = container.playerManager
-        )
-      }
+            FluxTheme(
+                mode = themeConfig.mode,
+                accent = themeConfig.accent,
+            ) {
+                FluxMainNavigation(
+                    homeViewModel = homeViewModel,
+                    videoViewModel = videoViewModel,
+                    genreViewModel = genreViewModel,
+                    moviesViewModel = moviesViewModel,
+                    wishlistViewModel = wishlistViewModel,
+                    searchViewModel = searchViewModel,
+                    authViewModel = authViewModel,
+                    themeViewModel = themeViewModel,
+                    playerManager = container.playerManager,
+                )
+            }
+        }
     }
-  }
 
-  override fun onDestroy() {
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }
-

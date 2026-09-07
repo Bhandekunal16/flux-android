@@ -14,13 +14,12 @@ import kotlinx.coroutines.launch
 data class MoviesUiState(
     val isLoading: Boolean = true,
     val movies: List<MovieItem> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 class MoviesViewModel(
-    private val fluxRepository: FluxRepository
+    private val fluxRepository: FluxRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(MoviesUiState())
     val uiState: StateFlow<MoviesUiState> = _uiState.asStateFlow()
 
@@ -35,9 +34,11 @@ class MoviesViewModel(
                 is Resource.Success -> {
                     _uiState.update { it.copy(isLoading = false, movies = result.data, errorMessage = null) }
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true) }
                 }

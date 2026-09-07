@@ -27,31 +27,36 @@ data class FluxCustomColors(
     val isDark: Boolean,
     val onPrimaryText: Color = EditorialOnPrimary,
     val cardBackground: Color = DarkSurface,
-    val outlineVariant: Color = DarkOutlineVariant
+    val outlineVariant: Color = DarkOutlineVariant,
 )
 
-val LocalFluxColors = staticCompositionLocalOf {
-    FluxCustomColors(
-        accentGradient = EditorialGradient,
-        surfaceElevated = DarkSurfaceElevated,
-        surfaceHigh = DarkSurfaceHigh,
-        border = DarkBorder,
-        textMuted = DarkTextMuted,
-        isDark = true,
-        onPrimaryText = EditorialOnPrimary,
-        cardBackground = DarkSurface,
-        outlineVariant = DarkOutlineVariant
-    )
-}
-
-fun buildFluxColorScheme(accent: AccentTheme, isDark: Boolean): ColorScheme {
-    val (primary, secondary, tertiary) = when (accent) {
-        AccentTheme.EDITORIAL -> Triple(EditorialPrimary, EditorialSecondary, EditorialTertiary)
-        AccentTheme.SUNSET -> Triple(SunsetPrimary, SunsetSecondary, SunsetTertiary)
-        AccentTheme.OCEAN -> Triple(OceanPrimary, OceanSecondary, OceanTertiary)
-        AccentTheme.FOREST -> Triple(ForestPrimary, ForestSecondary, ForestTertiary)
-        AccentTheme.BERRY -> Triple(BerryPrimary, BerrySecondary, BerryTertiary)
+val LocalFluxColors =
+    staticCompositionLocalOf {
+        FluxCustomColors(
+            accentGradient = EditorialGradient,
+            surfaceElevated = DarkSurfaceElevated,
+            surfaceHigh = DarkSurfaceHigh,
+            border = DarkBorder,
+            textMuted = DarkTextMuted,
+            isDark = true,
+            onPrimaryText = EditorialOnPrimary,
+            cardBackground = DarkSurface,
+            outlineVariant = DarkOutlineVariant,
+        )
     }
+
+fun buildFluxColorScheme(
+    accent: AccentTheme,
+    isDark: Boolean,
+): ColorScheme {
+    val (primary, secondary, tertiary) =
+        when (accent) {
+            AccentTheme.EDITORIAL -> Triple(EditorialPrimary, EditorialSecondary, EditorialTertiary)
+            AccentTheme.SUNSET -> Triple(SunsetPrimary, SunsetSecondary, SunsetTertiary)
+            AccentTheme.OCEAN -> Triple(OceanPrimary, OceanSecondary, OceanTertiary)
+            AccentTheme.FOREST -> Triple(ForestPrimary, ForestSecondary, ForestTertiary)
+            AccentTheme.BERRY -> Triple(BerryPrimary, BerrySecondary, BerryTertiary)
+        }
 
     return if (isDark) {
         darkColorScheme(
@@ -72,7 +77,7 @@ fun buildFluxColorScheme(accent: AccentTheme, isDark: Boolean): ColorScheme {
             surfaceVariant = DarkSurfaceHigh,
             onSurfaceVariant = DarkTextSecondary,
             outline = DarkBorder,
-            outlineVariant = DarkOutlineVariant
+            outlineVariant = DarkOutlineVariant,
         )
     } else {
         lightColorScheme(
@@ -93,7 +98,7 @@ fun buildFluxColorScheme(accent: AccentTheme, isDark: Boolean): ColorScheme {
             surfaceVariant = LightSurfaceElevated,
             onSurfaceVariant = LightTextSecondary,
             outline = LightBorder,
-            outlineVariant = LightOutlineVariant
+            outlineVariant = LightOutlineVariant,
         )
     }
 }
@@ -102,34 +107,37 @@ fun buildFluxColorScheme(accent: AccentTheme, isDark: Boolean): ColorScheme {
 fun FluxTheme(
     mode: ThemeMode = ThemeMode.DARK,
     accent: AccentTheme = AccentTheme.EDITORIAL,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val systemInDark = isSystemInDarkTheme()
-    val isDark = when (mode) {
-        ThemeMode.SYSTEM -> systemInDark
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT -> false
-    }
+    val isDark =
+        when (mode) {
+            ThemeMode.SYSTEM -> systemInDark
+            ThemeMode.DARK -> true
+            ThemeMode.LIGHT -> false
+        }
 
-    val gradient = when (accent) {
-        AccentTheme.EDITORIAL -> EditorialGradient
-        AccentTheme.SUNSET -> SunsetGradient
-        AccentTheme.OCEAN -> OceanGradient
-        AccentTheme.FOREST -> ForestGradient
-        AccentTheme.BERRY -> BerryGradient
-    }
+    val gradient =
+        when (accent) {
+            AccentTheme.EDITORIAL -> EditorialGradient
+            AccentTheme.SUNSET -> SunsetGradient
+            AccentTheme.OCEAN -> OceanGradient
+            AccentTheme.FOREST -> ForestGradient
+            AccentTheme.BERRY -> BerryGradient
+        }
 
-    val customColors = FluxCustomColors(
-        accentGradient = gradient,
-        surfaceElevated = if (isDark) DarkSurfaceElevated else LightSurfaceElevated,
-        surfaceHigh = if (isDark) DarkSurfaceHigh else LightSurfaceHigh,
-        border = if (isDark) DarkBorder else LightBorder,
-        textMuted = if (isDark) DarkTextMuted else LightTextMuted,
-        isDark = isDark,
-        onPrimaryText = if (accent == AccentTheme.EDITORIAL) EditorialOnPrimary else Color.White,
-        cardBackground = if (isDark) DarkSurface else LightSurface,
-        outlineVariant = if (isDark) DarkOutlineVariant else LightOutlineVariant
-    )
+    val customColors =
+        FluxCustomColors(
+            accentGradient = gradient,
+            surfaceElevated = if (isDark) DarkSurfaceElevated else LightSurfaceElevated,
+            surfaceHigh = if (isDark) DarkSurfaceHigh else LightSurfaceHigh,
+            border = if (isDark) DarkBorder else LightBorder,
+            textMuted = if (isDark) DarkTextMuted else LightTextMuted,
+            isDark = isDark,
+            onPrimaryText = if (accent == AccentTheme.EDITORIAL) EditorialOnPrimary else Color.White,
+            cardBackground = if (isDark) DarkSurface else LightSurface,
+            outlineVariant = if (isDark) DarkOutlineVariant else LightOutlineVariant,
+        )
 
     val colorScheme = buildFluxColorScheme(accent, isDark)
 
@@ -137,7 +145,7 @@ fun FluxTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
-            content = content
+            content = content,
         )
     }
 }

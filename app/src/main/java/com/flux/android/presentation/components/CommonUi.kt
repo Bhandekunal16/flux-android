@@ -55,28 +55,29 @@ fun FluxGlassCard(
     modifier: Modifier = Modifier,
     shape: RoundedCornerShape = RoundedCornerShape(20.dp),
     onClick: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val fluxColors = LocalFluxColors.current
-    val clickableModifier = if (onClick != null) {
-        modifier
-            .clip(shape)
-            .clickable { onClick() }
-    } else {
-        modifier.clip(shape)
-    }
+    val clickableModifier =
+        if (onClick != null) {
+            modifier
+                .clip(shape)
+                .clickable { onClick() }
+        } else {
+            modifier.clip(shape)
+        }
 
     Box(
-        modifier = clickableModifier
-            .background(
-                color = fluxColors.cardBackground,
-                shape = shape
-            )
-            .border(
-                width = 1.dp,
-                color = fluxColors.border,
-                shape = shape
-            )
+        modifier =
+            clickableModifier
+                .background(
+                    color = fluxColors.cardBackground,
+                    shape = shape,
+                ).border(
+                    width = 1.dp,
+                    color = fluxColors.border,
+                    shape = shape,
+                ),
     ) {
         content()
     }
@@ -85,50 +86,55 @@ fun FluxGlassCard(
 @Composable
 fun ShimmerCard(
     modifier: Modifier = Modifier,
-    height: Int = 180
+    height: Int = 180,
 ) {
     val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnim by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmerTranslate"
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 1200, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart,
+            ),
+        label = "shimmerTranslate",
     )
 
-    val shimmerColors = listOf(
-        Color(0xFF49454F).copy(alpha = 0.3f),
-        Color(0xFFD0BCFF).copy(alpha = 0.12f),
-        Color(0xFF49454F).copy(alpha = 0.3f)
-    )
+    val shimmerColors =
+        listOf(
+            Color(0xFF49454F).copy(alpha = 0.3f),
+            Color(0xFFD0BCFF).copy(alpha = 0.12f),
+            Color(0xFF49454F).copy(alpha = 0.3f),
+        )
 
-    val brush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(x = translateAnim - 200f, y = translateAnim - 200f),
-        end = Offset(x = translateAnim, y = translateAnim)
-    )
+    val brush =
+        Brush.linearGradient(
+            colors = shimmerColors,
+            start = Offset(x = translateAnim - 200f, y = translateAnim - 200f),
+            end = Offset(x = translateAnim, y = translateAnim),
+        )
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(height.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(brush)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(height.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(brush),
     )
 }
 
 @Composable
 fun ShimmerGrid(
     count: Int = 6,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         repeat(count) {
             ShimmerCard(height = 96)
@@ -143,29 +149,31 @@ fun EmptyStateView(
     description: String,
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Box(
-            modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape)
-                .background(fluxColors.surfaceElevated)
-                .border(1.dp, fluxColors.border, CircleShape),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .background(fluxColors.surfaceElevated)
+                    .border(1.dp, fluxColors.border, CircleShape),
+            contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = title,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(38.dp)
+                modifier = Modifier.size(38.dp),
             )
         }
         Spacer(modifier = Modifier.height(18.dp))
@@ -174,7 +182,7 @@ fun EmptyStateView(
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -182,7 +190,7 @@ fun EmptyStateView(
             style = MaterialTheme.typography.bodyMedium,
             color = fluxColors.textMuted,
             textAlign = TextAlign.Center,
-            lineHeight = 20.sp
+            lineHeight = 20.sp,
         )
         if (actionLabel != null && onAction != null) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -190,7 +198,7 @@ fun EmptyStateView(
                 onClick = onAction,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                modifier = Modifier.testTag("empty_state_action_btn")
+                modifier = Modifier.testTag("empty_state_action_btn"),
             ) {
                 Text(actionLabel, fontWeight = FontWeight.SemiBold)
             }
@@ -202,39 +210,40 @@ fun EmptyStateView(
 fun ErrorStateView(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(32.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = "Something went wrong",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.error
+            color = MaterialTheme.colorScheme.error,
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
             color = fluxColors.textMuted,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedButton(
             onClick = onRetry,
             shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.testTag("retry_button")
+            modifier = Modifier.testTag("retry_button"),
         ) {
             Icon(
                 imageVector = Icons.Default.Refresh,
                 contentDescription = "Retry",
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("Try Again")
@@ -246,47 +255,49 @@ fun ErrorStateView(
 fun ViewModeToggle(
     isGrid: Boolean,
     onToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
     Surface(
         shape = RoundedCornerShape(12.dp),
         color = fluxColors.surfaceHigh,
         border = androidx.compose.foundation.BorderStroke(1.dp, fluxColors.border),
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier.padding(2.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
                 onClick = { onToggle(true) },
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(if (isGrid) MaterialTheme.colorScheme.primary else Color.Transparent)
-                    .testTag("grid_view_toggle")
+                modifier =
+                    Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(if (isGrid) MaterialTheme.colorScheme.primary else Color.Transparent)
+                        .testTag("grid_view_toggle"),
             ) {
                 Icon(
                     imageVector = Icons.Default.GridView,
                     contentDescription = "Grid View",
                     tint = if (isGrid) fluxColors.onPrimaryText else fluxColors.textMuted,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
             IconButton(
                 onClick = { onToggle(false) },
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(if (!isGrid) MaterialTheme.colorScheme.primary else Color.Transparent)
-                    .testTag("list_view_toggle")
+                modifier =
+                    Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(if (!isGrid) MaterialTheme.colorScheme.primary else Color.Transparent)
+                        .testTag("list_view_toggle"),
             ) {
                 Icon(
                     imageVector = Icons.Default.ViewList,
                     contentDescription = "List View",
                     tint = if (!isGrid) fluxColors.onPrimaryText else fluxColors.textMuted,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
                 )
             }
         }

@@ -70,49 +70,51 @@ fun SettingsDialog(
     onSetAccentTheme: (AccentTheme) -> Unit,
     onLogout: () -> Unit,
     onOpenLogin: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val fluxColors = LocalFluxColors.current
     var customUrlInput by remember { mutableStateOf(ApiConfig.customBaseUrl ?: "") }
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp))
-                .background(fluxColors.cardBackground)
-                .border(1.dp, fluxColors.border, RoundedCornerShape(24.dp))
-                .padding(20.dp)
-                .testTag("settings_dialog")
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(fluxColors.cardBackground)
+                    .border(1.dp, fluxColors.border, RoundedCornerShape(24.dp))
+                    .padding(20.dp)
+                    .testTag("settings_dialog"),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
             ) {
                 // Header
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "Flux Settings",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(36.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = fluxColors.textMuted
+                            tint = fluxColors.textMuted,
                         )
                     }
                 }
@@ -125,35 +127,37 @@ fun SettingsDialog(
                     style = MaterialTheme.typography.labelSmall,
                     letterSpacing = 1.5.sp,
                     fontWeight = FontWeight.Bold,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Surface(
                     shape = RoundedCornerShape(14.dp),
                     color = fluxColors.surfaceElevated,
                     border = androidx.compose.foundation.BorderStroke(1.dp, fluxColors.border),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primaryContainer),
-                                contentAlignment = Alignment.Center
+                                modifier =
+                                    Modifier
+                                        .size(36.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.primaryContainer),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Person,
                                     contentDescription = "User",
                                     tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(20.dp),
                                 )
                             }
                             Spacer(modifier = Modifier.width(10.dp))
@@ -162,12 +166,12 @@ fun SettingsDialog(
                                     text = if (userSession != null) userSession.email else "Guest User",
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onBackground
+                                    color = MaterialTheme.colorScheme.onBackground,
                                 )
                                 Text(
                                     text = if (userSession != null) "Logged in" else "Sign in to sync wishlist",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = fluxColors.textMuted
+                                    color = fluxColors.textMuted,
                                 )
                             }
                         }
@@ -177,7 +181,7 @@ fun SettingsDialog(
                                 Icon(
                                     imageVector = Icons.Default.Logout,
                                     contentDescription = "Sign Out",
-                                    tint = MaterialTheme.colorScheme.error
+                                    tint = MaterialTheme.colorScheme.error,
                                 )
                             }
                         } else {
@@ -188,7 +192,7 @@ fun SettingsDialog(
                                 },
                                 shape = RoundedCornerShape(10.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                                modifier = Modifier.height(34.dp)
+                                modifier = Modifier.height(34.dp),
                             ) {
                                 Text("Sign In", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                             }
@@ -204,39 +208,42 @@ fun SettingsDialog(
                     style = MaterialTheme.typography.labelSmall,
                     letterSpacing = 1.5.sp,
                     fontWeight = FontWeight.Bold,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     ThemeMode.values().forEach { mode ->
                         val isSelected = themeConfig.mode == mode
                         Surface(
                             shape = RoundedCornerShape(12.dp),
                             color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else fluxColors.surfaceElevated,
-                            border = androidx.compose.foundation.BorderStroke(
-                                1.dp,
-                                if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.border
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable { onSetThemeMode(mode) }
+                            border =
+                                androidx.compose.foundation.BorderStroke(
+                                    1.dp,
+                                    if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.border,
+                                ),
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .clickable { onSetThemeMode(mode) },
                         ) {
                             Box(
                                 modifier = Modifier.padding(vertical = 10.dp),
-                                contentAlignment = Alignment.Center
+                                contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    text = when (mode) {
-                                        ThemeMode.DARK -> "Dark"
-                                        ThemeMode.LIGHT -> "Light"
-                                        ThemeMode.SYSTEM -> "System"
-                                    },
+                                    text =
+                                        when (mode) {
+                                            ThemeMode.DARK -> "Dark"
+                                            ThemeMode.LIGHT -> "Light"
+                                            ThemeMode.SYSTEM -> "System"
+                                        },
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                                 )
                             }
                         }
@@ -251,47 +258,49 @@ fun SettingsDialog(
                     style = MaterialTheme.typography.labelSmall,
                     letterSpacing = 1.5.sp,
                     fontWeight = FontWeight.Bold,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     listOf(
                         Triple(AccentTheme.EDITORIAL, "Editorial", EditorialGradient),
                         Triple(AccentTheme.SUNSET, "Sunset", SunsetGradient),
                         Triple(AccentTheme.OCEAN, "Ocean", OceanGradient),
                         Triple(AccentTheme.FOREST, "Forest", ForestGradient),
-                        Triple(AccentTheme.BERRY, "Berry", BerryGradient)
+                        Triple(AccentTheme.BERRY, "Berry", BerryGradient),
                     ).forEach { (accent, label, gradient) ->
                         val isSelected = themeConfig.accent == accent
                         Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable { onSetAccentTheme(accent) }
-                                .padding(vertical = 6.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .clickable { onSetAccentTheme(accent) }
+                                    .padding(vertical = 6.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .background(gradient)
-                                    .border(
-                                        width = if (isSelected) 2.5.dp else 1.dp,
-                                        color = if (isSelected) Color.White else Color.Transparent,
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
+                                modifier =
+                                    Modifier
+                                        .size(36.dp)
+                                        .clip(CircleShape)
+                                        .background(gradient)
+                                        .border(
+                                            width = if (isSelected) 2.5.dp else 1.dp,
+                                            color = if (isSelected) Color.White else Color.Transparent,
+                                            shape = CircleShape,
+                                        ),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 if (isSelected) {
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = "Selected",
                                         tint = Color.White,
-                                        modifier = Modifier.size(18.dp)
+                                        modifier = Modifier.size(18.dp),
                                     )
                                 }
                             }
@@ -300,7 +309,7 @@ fun SettingsDialog(
                                 text = label,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.textMuted,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             )
                         }
                     }
@@ -316,14 +325,14 @@ fun SettingsDialog(
                     style = MaterialTheme.typography.labelSmall,
                     letterSpacing = 1.5.sp,
                     fontWeight = FontWeight.Bold,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = ApiConfig.BASE_URL,
                     style = MaterialTheme.typography.bodySmall,
                     color = fluxColors.textMuted,
-                    fontSize = 11.sp
+                    fontSize = 11.sp,
                 )
             }
         }

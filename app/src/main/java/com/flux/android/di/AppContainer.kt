@@ -20,8 +20,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-class AppContainer(val context: Context) {
-
+class AppContainer(
+    val context: Context,
+) {
     val analytics: FluxAnalytics by lazy {
         FluxAnalytics()
     }
@@ -35,7 +36,8 @@ class AppContainer(val context: Context) {
     }
 
     val moshi: Moshi by lazy {
-        Moshi.Builder()
+        Moshi
+            .Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
     }
@@ -51,7 +53,8 @@ class AppContainer(val context: Context) {
     }
 
     val okHttpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
+        OkHttpClient
+            .Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
@@ -67,7 +70,8 @@ class AppContainer(val context: Context) {
 
     private fun buildRetrofit(baseUrl: String): Retrofit {
         val safeUrl = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
-        return Retrofit.Builder()
+        return Retrofit
+            .Builder()
             .baseUrl(safeUrl)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))

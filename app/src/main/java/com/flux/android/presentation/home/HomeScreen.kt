@@ -61,45 +61,49 @@ fun HomeScreen(
     onRetry: () -> Unit,
     onOpenSearch: () -> Unit,
     onOpenSettings: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
 
-    val regions = listOf(
-        Pair("IN", "India"),
-        Pair("US", "Global"),
-        Pair("GB", "UK"),
-        Pair("KR", "Korea"),
-        Pair("JP", "Japan")
-    )
+    val regions =
+        listOf(
+            Pair("IN", "India"),
+            Pair("US", "Global"),
+            Pair("GB", "UK"),
+            Pair("KR", "Korea"),
+            Pair("JP", "Japan"),
+        )
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("home_screen")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("home_screen"),
     ) {
         // Top App Bar: Brand Logo, Search Bar Trigger, Settings
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             // Logo & Title
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(fluxColors.accentGradient),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(38.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(fluxColors.accentGradient),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.MusicNote,
                         contentDescription = "Flux Logo",
                         tint = fluxColors.onPrimaryText,
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(22.dp),
                     )
                 }
                 Spacer(modifier = Modifier.width(10.dp))
@@ -109,13 +113,13 @@ fun HomeScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                     Text(
                         text = "Editorial Discovery",
                         style = MaterialTheme.typography.labelSmall,
                         color = fluxColors.textMuted,
-                        fontSize = 10.sp
+                        fontSize = 10.sp,
                     )
                 }
             }
@@ -124,33 +128,35 @@ fun HomeScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     onClick = onOpenSearch,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(fluxColors.surfaceHigh)
-                        .testTag("home_search_btn")
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(fluxColors.surfaceHigh)
+                            .testTag("home_search_btn"),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Search",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
                     onClick = onOpenSettings,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(fluxColors.surfaceHigh)
-                        .testTag("home_settings_btn")
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(fluxColors.surfaceHigh)
+                            .testTag("home_settings_btn"),
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Settings",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                 }
             }
@@ -159,27 +165,29 @@ fun HomeScreen(
         // Region selector chips
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(regions) { (code, name) ->
                 val isSelected = uiState.selectedRegion == code
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.surfaceHigh,
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp,
-                        if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.outlineVariant
-                    ),
-                    modifier = Modifier
-                        .clickable { onSetRegion(code) }
-                        .testTag("region_chip_$code")
+                    border =
+                        androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.outlineVariant,
+                        ),
+                    modifier =
+                        Modifier
+                            .clickable { onSetRegion(code) }
+                            .testTag("region_chip_$code"),
                 ) {
                     Text(
                         text = name,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = if (isSelected) fluxColors.onPrimaryText else MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                     )
                 }
             }
@@ -187,22 +195,23 @@ fun HomeScreen(
 
         // Section Title & Grid/List View Mode Toggle
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = "Trending Right Now",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
             )
 
             ViewModeToggle(
                 isGrid = uiState.isGrid,
-                onToggle = onSetViewMode
+                onToggle = onSetViewMode,
             )
         }
 
@@ -211,28 +220,31 @@ fun HomeScreen(
             uiState.isLoading -> {
                 ShimmerGrid(count = 6)
             }
+
             !uiState.errorMessage.isNullOrEmpty() && uiState.tracks.isEmpty() -> {
                 ErrorStateView(
                     message = uiState.errorMessage,
-                    onRetry = onRetry
+                    onRetry = onRetry,
                 )
             }
+
             uiState.tracks.isEmpty() -> {
                 EmptyStateView(
                     icon = Icons.Default.MusicNote,
                     title = "No Trending Tracks Found",
                     description = "We couldn't retrieve trending tracks at this moment.",
                     actionLabel = "Refresh",
-                    onAction = onRetry
+                    onAction = onRetry,
                 )
             }
+
             uiState.isGrid -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.tracks, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -241,16 +253,17 @@ fun HomeScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onTrackSelect(track, uiState.tracks) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
                 }
             }
+
             else -> {
                 LazyColumn(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.tracks, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -259,7 +272,7 @@ fun HomeScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onTrackSelect(track, uiState.tracks) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
                 }

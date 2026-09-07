@@ -47,67 +47,71 @@ fun VideoScreen(
     onToggleWishlist: (MusicTrack) -> Unit,
     onSetViewMode: (Boolean) -> Unit,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("video_screen")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("video_screen"),
     ) {
         // Title Bar
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(
                     text = "Video Discovery",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
                     text = "Watch high-definition music videos & live shows",
                     style = MaterialTheme.typography.bodySmall,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
             }
 
             ViewModeToggle(
                 isGrid = uiState.isGrid,
-                onToggle = onSetViewMode
+                onToggle = onSetViewMode,
             )
         }
 
         // Category Chips
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(categories) { category ->
                 val isSelected = uiState.selectedCategory == category
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.surfaceHigh,
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp,
-                        if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.outlineVariant
-                    ),
-                    modifier = Modifier
-                        .clickable { onSelectCategory(category) }
-                        .testTag("video_category_$category")
+                    border =
+                        androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.outlineVariant,
+                        ),
+                    modifier =
+                        Modifier
+                            .clickable { onSelectCategory(category) }
+                            .testTag("video_category_$category"),
                 ) {
                     Text(
                         text = category,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = if (isSelected) fluxColors.onPrimaryText else MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                     )
                 }
             }
@@ -118,28 +122,31 @@ fun VideoScreen(
             uiState.isLoading -> {
                 ShimmerGrid(count = 6)
             }
+
             !uiState.errorMessage.isNullOrEmpty() && uiState.videos.isEmpty() -> {
                 ErrorStateView(
                     message = uiState.errorMessage,
-                    onRetry = onRetry
+                    onRetry = onRetry,
                 )
             }
+
             uiState.filteredVideos.isEmpty() -> {
                 EmptyStateView(
                     icon = Icons.Default.SmartDisplay,
                     title = "No Videos Available",
                     description = "Try selecting another category or refresh.",
                     actionLabel = "Refresh",
-                    onAction = onRetry
+                    onAction = onRetry,
                 )
             }
+
             uiState.isGrid -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 96.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.filteredVideos, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -148,16 +155,17 @@ fun VideoScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onListenAudio(track, uiState.filteredVideos) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
                 }
             }
+
             else -> {
                 LazyColumn(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.filteredVideos, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -166,7 +174,7 @@ fun VideoScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onListenAudio(track, uiState.filteredVideos) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
                 }

@@ -73,7 +73,7 @@ fun FullPlayerScreen(
     isWishlisted: Boolean,
     onToggleWishlist: (MusicTrack) -> Unit,
     onWatchVideo: (MusicTrack) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val track = playerState.currentTrack ?: return
     val fluxColors = LocalFluxColors.current
@@ -84,43 +84,45 @@ fun FullPlayerScreen(
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnBackPress = true)
+        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnBackPress = true),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            if (fluxColors.isDark) Color(0xFF2B2930) else Color(0xFFEADDFF),
-                            if (fluxColors.isDark) Color(0xFF1C1B1F) else Color(0xFFFEF7FF)
-                        )
-                    )
-                )
-                .padding(horizontal = 24.dp, vertical = 20.dp)
-                .testTag("full_player_screen")
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors =
+                                listOf(
+                                    if (fluxColors.isDark) Color(0xFF2B2930) else Color(0xFFEADDFF),
+                                    if (fluxColors.isDark) Color(0xFF1C1B1F) else Color(0xFFFEF7FF),
+                                ),
+                        ),
+                    ).padding(horizontal = 24.dp, vertical = 20.dp)
+                    .testTag("full_player_screen"),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Top Action Bar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .testTag("full_player_collapse")
+                        modifier =
+                            Modifier
+                                .size(44.dp)
+                                .testTag("full_player_collapse"),
                     ) {
                         Icon(
                             imageVector = Icons.Default.ExpandMore,
                             contentDescription = "Collapse Player",
                             tint = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(32.dp),
                         )
                     }
 
@@ -129,20 +131,21 @@ fun FullPlayerScreen(
                         style = MaterialTheme.typography.labelMedium,
                         letterSpacing = 2.sp,
                         fontWeight = FontWeight.Bold,
-                        color = fluxColors.textMuted
+                        color = fluxColors.textMuted,
                     )
 
                     IconButton(
                         onClick = { showQueue = !showQueue },
-                        modifier = Modifier
-                            .size(44.dp)
-                            .testTag("full_player_queue_toggle")
+                        modifier =
+                            Modifier
+                                .size(44.dp)
+                                .testTag("full_player_queue_toggle"),
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.QueueMusic,
                             contentDescription = "Queue",
                             tint = if (showQueue) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
                     }
                 }
@@ -156,35 +159,39 @@ fun FullPlayerScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp),
                     )
                     LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         itemsIndexed(playerState.queue) { index, queueTrack ->
                             val isCurrent = index == playerState.currentIndex
                             FluxGlassCard(
                                 onClick = { playerManager.playTrack(queueTrack, playerState.queue) },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(10.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     AsyncImage(
                                         model = queueTrack.thumbnailUrl,
                                         contentDescription = queueTrack.title,
-                                        modifier = Modifier
-                                            .size(44.dp)
-                                            .clip(RoundedCornerShape(8.dp)),
-                                        contentScale = ContentScale.Crop
+                                        modifier =
+                                            Modifier
+                                                .size(44.dp)
+                                                .clip(RoundedCornerShape(8.dp)),
+                                        contentScale = ContentScale.Crop,
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Column(modifier = Modifier.weight(1f)) {
@@ -194,13 +201,13 @@ fun FullPlayerScreen(
                                             fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal,
                                             color = if (isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                                             maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
+                                            overflow = TextOverflow.Ellipsis,
                                         )
                                         Text(
                                             text = queueTrack.artist,
                                             style = MaterialTheme.typography.bodySmall,
                                             color = fluxColors.textMuted,
-                                            maxLines = 1
+                                            maxLines = 1,
                                         )
                                     }
                                 }
@@ -210,24 +217,26 @@ fun FullPlayerScreen(
                 } else {
                     // Artwork with rounded corners and neon glow
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Surface(
                             shape = RoundedCornerShape(24.dp),
                             shadowElevation = 16.dp,
-                            modifier = Modifier
-                                .fillMaxWidth(0.92f)
-                                .aspectRatio(1f)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth(0.92f)
+                                    .aspectRatio(1f),
                         ) {
                             AsyncImage(
                                 model = track.thumbnailUrl,
                                 contentDescription = track.title,
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
                             )
                         }
                     }
@@ -238,7 +247,7 @@ fun FullPlayerScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
@@ -247,7 +256,7 @@ fun FullPlayerScreen(
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = MaterialTheme.colorScheme.onBackground,
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
@@ -255,7 +264,7 @@ fun FullPlayerScreen(
                                 style = MaterialTheme.typography.titleMedium,
                                 color = fluxColors.textMuted,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
                             )
                         }
 
@@ -263,30 +272,32 @@ fun FullPlayerScreen(
                             // Watch video button
                             IconButton(
                                 onClick = { onWatchVideo(track) },
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .testTag("full_player_watch_btn")
+                                modifier =
+                                    Modifier
+                                        .size(44.dp)
+                                        .testTag("full_player_watch_btn"),
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.SmartDisplay,
                                     contentDescription = "Watch Video",
                                     tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(26.dp)
+                                    modifier = Modifier.size(26.dp),
                                 )
                             }
 
                             // Wishlist button
                             IconButton(
                                 onClick = { onToggleWishlist(track) },
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .testTag("full_player_wishlist_btn")
+                                modifier =
+                                    Modifier
+                                        .size(44.dp)
+                                        .testTag("full_player_wishlist_btn"),
                             ) {
                                 Icon(
                                     imageVector = if (isWishlisted) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                                     contentDescription = "Wishlist",
                                     tint = if (isWishlisted) Color(0xFFFF2A6D) else MaterialTheme.colorScheme.onBackground,
-                                    modifier = Modifier.size(26.dp)
+                                    modifier = Modifier.size(26.dp),
                                 )
                             }
                         }
@@ -295,14 +306,18 @@ fun FullPlayerScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     // Seek bar & Timers
-                    val currentPos = if (isDraggingSlider) {
-                        (sliderProgress * playerState.durationMs).toLong()
-                    } else {
-                        playerState.currentPositionMs
-                    }
-                    val effectiveFraction = if (playerState.durationMs > 0) {
-                        (currentPos.toFloat() / playerState.durationMs.toFloat()).coerceIn(0f, 1f)
-                    } else 0f
+                    val currentPos =
+                        if (isDraggingSlider) {
+                            (sliderProgress * playerState.durationMs).toLong()
+                        } else {
+                            playerState.currentPositionMs
+                        }
+                    val effectiveFraction =
+                        if (playerState.durationMs > 0) {
+                            (currentPos.toFloat() / playerState.durationMs.toFloat()).coerceIn(0f, 1f)
+                        } else {
+                            0f
+                        }
 
                     Slider(
                         value = if (isDraggingSlider) sliderProgress else effectiveFraction,
@@ -315,29 +330,31 @@ fun FullPlayerScreen(
                             val seekMs = (sliderProgress * playerState.durationMs).toLong()
                             playerManager.seekTo(seekMs)
                         },
-                        colors = SliderDefaults.colors(
-                            thumbColor = MaterialTheme.colorScheme.primary,
-                            activeTrackColor = MaterialTheme.colorScheme.primary,
-                            inactiveTrackColor = fluxColors.surfaceHigh
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag("full_player_slider")
+                        colors =
+                            SliderDefaults.colors(
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primary,
+                                inactiveTrackColor = fluxColors.surfaceHigh,
+                            ),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .testTag("full_player_slider"),
                     )
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = formatTime(currentPos),
                             style = MaterialTheme.typography.bodySmall,
-                            color = fluxColors.textMuted
+                            color = fluxColors.textMuted,
                         )
                         Text(
                             text = formatTime(playerState.durationMs),
                             style = MaterialTheme.typography.bodySmall,
-                            color = fluxColors.textMuted
+                            color = fluxColors.textMuted,
                         )
                     }
 
@@ -347,38 +364,40 @@ fun FullPlayerScreen(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         // Repeat button
                         IconButton(
                             onClick = { playerManager.toggleRepeat() },
-                            modifier = Modifier.size(44.dp)
+                            modifier = Modifier.size(44.dp),
                         ) {
                             Icon(
-                                imageVector = when (playerState.repeatOption) {
-                                    RepeatOption.ONE -> Icons.Default.RepeatOne
-                                    else -> Icons.Default.Repeat
-                                },
+                                imageVector =
+                                    when (playerState.repeatOption) {
+                                        RepeatOption.ONE -> Icons.Default.RepeatOne
+                                        else -> Icons.Default.Repeat
+                                    },
                                 contentDescription = "Repeat",
-                                tint = if (playerState.repeatOption != RepeatOption.OFF) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    fluxColors.textMuted
-                                },
-                                modifier = Modifier.size(24.dp)
+                                tint =
+                                    if (playerState.repeatOption != RepeatOption.OFF) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        fluxColors.textMuted
+                                    },
+                                modifier = Modifier.size(24.dp),
                             )
                         }
 
                         // Previous button
                         IconButton(
                             onClick = { playerManager.previous() },
-                            modifier = Modifier.size(54.dp)
+                            modifier = Modifier.size(54.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.SkipPrevious,
                                 contentDescription = "Previous",
                                 tint = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(36.dp),
                             )
                         }
 
@@ -388,22 +407,23 @@ fun FullPlayerScreen(
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(72.dp),
                                     strokeWidth = 3.dp,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.primary,
                                 )
                             }
                             IconButton(
                                 onClick = { playerManager.togglePlayPause() },
-                                modifier = Modifier
-                                    .size(68.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .testTag("full_player_play_pause")
+                                modifier =
+                                    Modifier
+                                        .size(68.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.primary)
+                                        .testTag("full_player_play_pause"),
                             ) {
                                 Icon(
                                     imageVector = if (playerState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                     contentDescription = if (playerState.isPlaying) "Pause" else "Play",
                                     tint = fluxColors.onPrimaryText,
-                                    modifier = Modifier.size(38.dp)
+                                    modifier = Modifier.size(38.dp),
                                 )
                             }
                         }
@@ -411,13 +431,13 @@ fun FullPlayerScreen(
                         // Next button
                         IconButton(
                             onClick = { playerManager.next() },
-                            modifier = Modifier.size(54.dp)
+                            modifier = Modifier.size(54.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.SkipNext,
                                 contentDescription = "Next",
                                 tint = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(36.dp)
+                                modifier = Modifier.size(36.dp),
                             )
                         }
 

@@ -16,19 +16,20 @@ import kotlinx.coroutines.launch
 data class AuthUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val showLoginDialog: Boolean = false
+    val showLoginDialog: Boolean = false,
 )
 
 class AuthViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
-
-    val session: StateFlow<UserSession?> = authRepository.getSession()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
+    val session: StateFlow<UserSession?> =
+        authRepository
+            .getSession()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null,
+            )
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -41,7 +42,10 @@ class AuthViewModel(
         _uiState.update { it.copy(showLoginDialog = false, errorMessage = null) }
     }
 
-    fun login(email: String, onSuccess: () -> Unit = {}) {
+    fun login(
+        email: String,
+        onSuccess: () -> Unit = {},
+    ) {
         val trimmed = email.trim()
         if (trimmed.isEmpty() || !trimmed.contains("@")) {
             _uiState.update { it.copy(errorMessage = "Please enter a valid email address.") }
@@ -55,9 +59,11 @@ class AuthViewModel(
                     _uiState.update { it.copy(isLoading = false, showLoginDialog = false, errorMessage = null) }
                     onSuccess()
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true) }
                 }

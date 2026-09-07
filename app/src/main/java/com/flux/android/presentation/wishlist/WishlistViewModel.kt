@@ -19,14 +19,13 @@ data class WishlistUiState(
     val isGrid: Boolean = false,
     val isUnauthenticated: Boolean = false,
     val errorMessage: String? = null,
-    val actionFeedback: String? = null
+    val actionFeedback: String? = null,
 )
 
 class WishlistViewModel(
     private val fluxRepository: FluxRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(WishlistUiState())
     val uiState: StateFlow<WishlistUiState> = _uiState.asStateFlow()
 
@@ -46,19 +45,21 @@ class WishlistViewModel(
                             isLoading = false,
                             items = result.data,
                             isUnauthenticated = false,
-                            errorMessage = null
+                            errorMessage = null,
                         )
                     }
                 }
+
                 is Resource.Error -> {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
                             isUnauthenticated = result.code == 401 || !isLoggedIn,
-                            errorMessage = if (result.code == 401) null else result.message
+                            errorMessage = if (result.code == 401) null else result.message,
                         )
                     }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true) }
                 }
@@ -66,7 +67,10 @@ class WishlistViewModel(
         }
     }
 
-    fun toggleWishlist(track: MusicTrack, onRequireLogin: () -> Unit = {}) {
+    fun toggleWishlist(
+        track: MusicTrack,
+        onRequireLogin: () -> Unit = {},
+    ) {
         val isWishlisted = _uiState.value.items.any { it.videoId == track.id }
         if (!authRepository.isLoggedIn()) {
             onRequireLogin()
@@ -86,15 +90,20 @@ class WishlistViewModel(
             when (val result = fluxRepository.addToWishlist(track)) {
                 is Resource.Success -> {
                     _uiState.update {
-                        val updated = if (it.items.none { i -> i.videoId == track.id }) {
-                            listOf(result.data) + it.items
-                        } else it.items
+                        val updated =
+                            if (it.items.none { i -> i.videoId == track.id }) {
+                                listOf(result.data) + it.items
+                            } else {
+                                it.items
+                            }
                         it.copy(items = updated, actionFeedback = "Saved to Wishlist")
                     }
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(errorMessage = result.message) }
                 }
+
                 is Resource.Loading -> {}
             }
         }
@@ -110,10 +119,12 @@ class WishlistViewModel(
                 is Resource.Success -> {
                     _uiState.update { it.copy(actionFeedback = "Removed from Wishlist") }
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(errorMessage = result.message) }
                     loadWishlist()
                 }
+
                 is Resource.Loading -> {}
             }
         }

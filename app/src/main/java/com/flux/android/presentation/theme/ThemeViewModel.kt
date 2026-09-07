@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ThemeViewModel(
-    private val themePreferences: ThemePreferences
+    private val themePreferences: ThemePreferences,
 ) : ViewModel() {
-
-    val themeConfig: StateFlow<ThemeConfig> = themePreferences.themeConfig
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ThemeConfig()
-        )
+    val themeConfig: StateFlow<ThemeConfig> =
+        themePreferences.themeConfig
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = ThemeConfig(),
+            )
 
     fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch {

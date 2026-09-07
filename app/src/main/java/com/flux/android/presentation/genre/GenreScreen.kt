@@ -49,67 +49,71 @@ fun GenreScreen(
     onToggleWishlist: (MusicTrack) -> Unit,
     onSetViewMode: (Boolean) -> Unit,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("genre_screen")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("genre_screen"),
     ) {
         // Title Bar
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(
                     text = "Explore Genres",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
                     text = "18 curated music categories",
                     style = MaterialTheme.typography.bodySmall,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
             }
 
             ViewModeToggle(
                 isGrid = uiState.isGrid,
-                onToggle = onSetViewMode
+                onToggle = onSetViewMode,
             )
         }
 
         // Horizontal scrolling 18 genres list
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(uiState.genres, key = { it.id }) { genre ->
                 val isSelected = uiState.selectedGenre?.id == genre.id
                 Surface(
                     shape = RoundedCornerShape(20.dp),
                     color = if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.surfaceHigh,
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp,
-                        if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.outlineVariant
-                    ),
-                    modifier = Modifier
-                        .clickable { onSelectGenre(genre) }
-                        .testTag("genre_chip_${genre.id}")
+                    border =
+                        androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            if (isSelected) MaterialTheme.colorScheme.primary else fluxColors.outlineVariant,
+                        ),
+                    modifier =
+                        Modifier
+                            .clickable { onSelectGenre(genre) }
+                            .testTag("genre_chip_${genre.id}"),
                 ) {
                     Text(
                         text = genre.name,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = if (isSelected) fluxColors.onPrimaryText else MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                     )
                 }
             }
@@ -122,7 +126,7 @@ fun GenreScreen(
                     text = genre.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = fluxColors.textMuted,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 )
             }
         }
@@ -134,28 +138,31 @@ fun GenreScreen(
             uiState.isLoadingTracks -> {
                 ShimmerGrid(count = 6)
             }
+
             !uiState.errorMessage.isNullOrEmpty() && uiState.tracks.isEmpty() -> {
                 ErrorStateView(
                     message = uiState.errorMessage,
-                    onRetry = onRetry
+                    onRetry = onRetry,
                 )
             }
+
             uiState.tracks.isEmpty() -> {
                 EmptyStateView(
                     icon = Icons.Default.Category,
                     title = "No Tracks for this Genre",
                     description = "We couldn't find tracks for ${uiState.selectedGenre?.name ?: "this genre"}.",
                     actionLabel = "Retry",
-                    onAction = onRetry
+                    onAction = onRetry,
                 )
             }
+
             uiState.isGrid -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.tracks, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -164,16 +171,17 @@ fun GenreScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onTrackSelect(track, uiState.tracks) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
                 }
             }
+
             else -> {
                 LazyColumn(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.tracks, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -182,7 +190,7 @@ fun GenreScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onTrackSelect(track, uiState.tracks) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
                 }

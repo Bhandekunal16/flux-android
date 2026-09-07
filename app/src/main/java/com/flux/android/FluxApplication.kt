@@ -4,7 +4,6 @@ import android.app.Application
 import com.flux.android.di.AppContainer
 
 class FluxApplication : Application() {
-
     lateinit var appContainer: AppContainer
         private set
 

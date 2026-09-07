@@ -61,42 +61,44 @@ fun WishlistScreen(
     onOpenLogin: () -> Unit,
     onRetry: () -> Unit,
     onDiscover: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
     val tracks = uiState.items.map { it.toMusicTrack() }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("wishlist_screen")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("wishlist_screen"),
     ) {
         // Top Header
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
                 Text(
                     text = "My Wishlist",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
                     text = "${uiState.items.size} saved favorite tracks",
                     style = MaterialTheme.typography.bodySmall,
-                    color = fluxColors.textMuted
+                    color = fluxColors.textMuted,
                 )
             }
 
             if (uiState.items.isNotEmpty()) {
                 ViewModeToggle(
                     isGrid = uiState.isGrid,
-                    onToggle = onSetViewMode
+                    onToggle = onSetViewMode,
                 )
             }
         }
@@ -104,28 +106,31 @@ fun WishlistScreen(
         // Unauthenticated Banner Card if needed
         if (uiState.isUnauthenticated) {
             FluxGlassCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = "Sign in",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                     }
 
@@ -136,12 +141,12 @@ fun WishlistScreen(
                             text = "Sync Your Wishlist",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
                         )
                         Text(
                             text = "Sign in to keep your library in sync across devices.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = fluxColors.textMuted
+                            color = fluxColors.textMuted,
                         )
                     }
 
@@ -150,11 +155,12 @@ fun WishlistScreen(
                     Button(
                         onClick = onOpenLogin,
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = fluxColors.onPrimaryText
-                        ),
-                        modifier = Modifier.testTag("wishlist_sign_in_btn")
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = fluxColors.onPrimaryText,
+                            ),
+                        modifier = Modifier.testTag("wishlist_sign_in_btn"),
                     ) {
                         Text("Sign In", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = fluxColors.onPrimaryText)
                     }
@@ -165,25 +171,27 @@ fun WishlistScreen(
         // Action Bar: Play All
         if (tracks.isNotEmpty()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Button(
                     onClick = { onPlayAll(tracks) },
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = fluxColors.onPrimaryText
-                    ),
-                    modifier = Modifier.testTag("wishlist_play_all_btn")
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = fluxColors.onPrimaryText,
+                        ),
+                    modifier = Modifier.testTag("wishlist_play_all_btn"),
                 ) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Play All",
                         tint = fluxColors.onPrimaryText,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text("Play All (${tracks.size})", fontWeight = FontWeight.SemiBold, color = fluxColors.onPrimaryText)
@@ -195,28 +203,31 @@ fun WishlistScreen(
             uiState.isLoading -> {
                 ShimmerGrid(count = 4)
             }
+
             !uiState.errorMessage.isNullOrEmpty() && uiState.items.isEmpty() -> {
                 ErrorStateView(
                     message = uiState.errorMessage,
-                    onRetry = onRetry
+                    onRetry = onRetry,
                 )
             }
+
             uiState.items.isEmpty() -> {
                 EmptyStateView(
                     icon = Icons.Default.Favorite,
                     title = "Your Wishlist is Empty",
                     description = "Save songs, live shows, and videos by tapping the heart icon anywhere in Flux.",
                     actionLabel = "Discover Music",
-                    onAction = onDiscover
+                    onAction = onDiscover,
                 )
             }
+
             uiState.isGrid -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(tracks, key = { it.id }) { track ->
                         TrackCardGrid(
@@ -224,16 +235,17 @@ fun WishlistScreen(
                             isWishlisted = true,
                             onListen = { onTrackSelect(track, tracks) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onRemoveFromWishlist(track.id) }
+                            onWishlistToggle = { onRemoveFromWishlist(track.id) },
                         )
                     }
                 }
             }
+
             else -> {
                 LazyColumn(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(tracks, key = { it.id }) { track ->
                         TrackCardList(
@@ -241,7 +253,7 @@ fun WishlistScreen(
                             isWishlisted = true,
                             onListen = { onTrackSelect(track, tracks) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onRemoveFromWishlist(track.id) }
+                            onWishlistToggle = { onRemoveFromWishlist(track.id) },
                         )
                     }
                 }

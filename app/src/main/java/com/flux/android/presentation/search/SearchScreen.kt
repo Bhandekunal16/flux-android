@@ -67,31 +67,33 @@ fun SearchScreen(
     onWatchVideo: (MusicTrack) -> Unit,
     onToggleWishlist: (MusicTrack) -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("search_screen")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("search_screen"),
     ) {
         // Search Input Bar
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
                 onClick = onBack,
-                modifier = Modifier.testTag("search_back_btn")
+                modifier = Modifier.testTag("search_back_btn"),
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onBackground,
                 )
             }
 
@@ -106,7 +108,7 @@ fun SearchScreen(
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 },
                 trailingIcon = {
@@ -115,44 +117,47 @@ fun SearchScreen(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Clear search",
-                                tint = fluxColors.textMuted
+                                tint = fluxColors.textMuted,
                             )
                         }
                     }
                 },
                 shape = RoundedCornerShape(24.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = Color.Transparent,
-                    focusedContainerColor = fluxColors.surfaceHigh,
-                    unfocusedContainerColor = fluxColors.surfaceHigh,
-                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground
-                ),
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("search_input_field")
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedContainerColor = fluxColors.surfaceHigh,
+                        unfocusedContainerColor = fluxColors.surfaceHigh,
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    ),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .testTag("search_input_field"),
             )
         }
 
         // View toggle when results exist
         if (uiState.results.isNotEmpty()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Results (${uiState.results.size})",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 ViewModeToggle(
                     isGrid = uiState.isGrid,
-                    onToggle = onSetViewMode
+                    onToggle = onSetViewMode,
                 )
             }
         }
@@ -162,12 +167,14 @@ fun SearchScreen(
             uiState.isLoading -> {
                 ShimmerGrid(count = 6)
             }
+
             !uiState.errorMessage.isNullOrEmpty() && uiState.results.isEmpty() -> {
                 ErrorStateView(
                     message = uiState.errorMessage,
-                    onRetry = { onQueryChange(uiState.query) }
+                    onRetry = { onQueryChange(uiState.query) },
                 )
             }
+
             uiState.query.isEmpty() -> {
                 // Recent / Trending Searches
                 Column(modifier = Modifier.padding(20.dp)) {
@@ -176,14 +183,14 @@ fun SearchScreen(
                             imageVector = Icons.Default.History,
                             contentDescription = "Recent",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
                         Spacer(modifier = Modifier.size(8.dp))
                         Text(
                             text = "Suggested Searches",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
                         )
                     }
 
@@ -191,42 +198,45 @@ fun SearchScreen(
 
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         uiState.recentSearches.forEach { keyword ->
                             Surface(
                                 shape = RoundedCornerShape(20.dp),
                                 color = fluxColors.surfaceHigh,
                                 border = androidx.compose.foundation.BorderStroke(1.dp, fluxColors.outlineVariant),
-                                modifier = Modifier
-                                    .clickable { onQueryChange(keyword) }
-                                    .testTag("suggested_search_$keyword")
+                                modifier =
+                                    Modifier
+                                        .clickable { onQueryChange(keyword) }
+                                        .testTag("suggested_search_$keyword"),
                             ) {
                                 Text(
                                     text = keyword,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onBackground,
-                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                                 )
                             }
                         }
                     }
                 }
             }
+
             uiState.results.isEmpty() -> {
                 EmptyStateView(
                     icon = Icons.Default.Search,
                     title = "No Matches Found",
-                    description = "Try searching with different keywords, artist names, or song titles."
+                    description = "Try searching with different keywords, artist names, or song titles.",
                 )
             }
+
             uiState.isGrid -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.results, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -235,17 +245,18 @@ fun SearchScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onTrackSelect(track, uiState.results) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
 
                     if (!uiState.nextPageToken.isNullOrEmpty()) {
                         item {
                             Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 if (uiState.isLoadingMore) {
                                     CircularProgressIndicator(modifier = Modifier.size(28.dp))
@@ -259,11 +270,12 @@ fun SearchScreen(
                     }
                 }
             }
+
             else -> {
                 LazyColumn(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.results, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
@@ -272,17 +284,18 @@ fun SearchScreen(
                             isWishlisted = isWishlisted,
                             onListen = { onTrackSelect(track, uiState.results) },
                             onWatch = { onWatchVideo(track) },
-                            onWishlistToggle = { onToggleWishlist(track) }
+                            onWishlistToggle = { onToggleWishlist(track) },
                         )
                     }
 
                     if (!uiState.nextPageToken.isNullOrEmpty()) {
                         item {
                             Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 if (uiState.isLoadingMore) {
                                     CircularProgressIndicator(modifier = Modifier.size(28.dp))

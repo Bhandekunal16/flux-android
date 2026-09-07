@@ -15,46 +15,47 @@ import java.io.IOException
 enum class ThemeMode {
     SYSTEM,
     DARK,
-    LIGHT
+    LIGHT,
 }
 
 enum class AccentTheme {
     EDITORIAL, // Lilac #D0BCFF, Mauve #CCC2DC, Violet #381E72 (Editorial Aesthetic)
-    SUNSET,    // Neon orange, flame coral, violet
-    OCEAN,     // Cyan, electric blue, sapphire
-    FOREST,    // Emerald, mint, deep teal
-    BERRY      // Magenta, deep rose, violet
+    SUNSET, // Neon orange, flame coral, violet
+    OCEAN, // Cyan, electric blue, sapphire
+    FOREST, // Emerald, mint, deep teal
+    BERRY, // Magenta, deep rose, violet
 }
 
 data class ThemeConfig(
     val mode: ThemeMode = ThemeMode.DARK,
-    val accent: AccentTheme = AccentTheme.EDITORIAL
+    val accent: AccentTheme = AccentTheme.EDITORIAL,
 )
 
 private val Context.themeDataStore: DataStore<Preferences> by preferencesDataStore(name = "flux_theme_prefs")
 
-class ThemePreferences(private val context: Context) {
-
+class ThemePreferences(
+    private val context: Context,
+) {
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val ACCENT_THEME = stringPreferencesKey("accent_theme")
     }
 
-    val themeConfig: Flow<ThemeConfig> = context.themeDataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
+    val themeConfig: Flow<ThemeConfig> =
+        context.themeDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }.map { prefs ->
+                val modeStr = prefs[Keys.THEME_MODE] ?: ThemeMode.DARK.name
+                val accentStr = prefs[Keys.ACCENT_THEME] ?: AccentTheme.EDITORIAL.name
+                val mode = runCatching { ThemeMode.valueOf(modeStr) }.getOrDefault(ThemeMode.DARK)
+                val accent = runCatching { AccentTheme.valueOf(accentStr) }.getOrDefault(AccentTheme.EDITORIAL)
+                ThemeConfig(mode = mode, accent = accent)
             }
-        }
-        .map { prefs ->
-            val modeStr = prefs[Keys.THEME_MODE] ?: ThemeMode.DARK.name
-            val accentStr = prefs[Keys.ACCENT_THEME] ?: AccentTheme.EDITORIAL.name
-            val mode = runCatching { ThemeMode.valueOf(modeStr) }.getOrDefault(ThemeMode.DARK)
-            val accent = runCatching { AccentTheme.valueOf(accentStr) }.getOrDefault(AccentTheme.EDITORIAL)
-            ThemeConfig(mode = mode, accent = accent)
-        }
 
     suspend fun setThemeMode(mode: ThemeMode) {
         context.themeDataStore.edit { prefs ->

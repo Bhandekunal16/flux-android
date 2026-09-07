@@ -17,13 +17,12 @@ data class VideoUiState(
     val filteredVideos: List<MusicTrack> = emptyList(),
     val selectedCategory: String = "All Videos",
     val isGrid: Boolean = true,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 class VideoViewModel(
-    private val fluxRepository: FluxRepository
+    private val fluxRepository: FluxRepository,
 ) : ViewModel() {
-
     val categories = listOf("All Videos", "Music Videos", "Live Performances", "Official Releases")
 
     private val _uiState = MutableStateFlow(VideoUiState())
@@ -45,13 +44,15 @@ class VideoViewModel(
                             isLoading = false,
                             videos = tracks,
                             filteredVideos = filterByCategory(tracks, it.selectedCategory),
-                            errorMessage = null
+                            errorMessage = null,
                         )
                     }
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true) }
                 }
@@ -63,7 +64,7 @@ class VideoViewModel(
         _uiState.update {
             it.copy(
                 selectedCategory = category,
-                filteredVideos = filterByCategory(it.videos, category)
+                filteredVideos = filterByCategory(it.videos, category),
             )
         }
     }
@@ -72,14 +73,33 @@ class VideoViewModel(
         _uiState.update { it.copy(isGrid = isGrid) }
     }
 
-    private fun filterByCategory(tracks: List<MusicTrack>, category: String): List<MusicTrack> {
-        return when (category) {
-            "All Videos" -> tracks
-            "Music Videos" -> tracks.filter { it.title.contains("Official", ignoreCase = true) || it.title.contains("Video", ignoreCase = true) }
-                .ifEmpty { tracks }
-            "Live Performances" -> tracks.filter { it.title.contains("Live", ignoreCase = true) || it.title.contains("Tour", ignoreCase = true) }
-                .ifEmpty { tracks }
-            else -> tracks
+    private fun filterByCategory(
+        tracks: List<MusicTrack>,
+        category: String,
+    ): List<MusicTrack> =
+        when (category) {
+            "All Videos" -> {
+                tracks
+            }
+
+            "Music Videos" -> {
+                tracks
+                    .filter {
+                        it.title.contains("Official", ignoreCase = true) ||
+                            it.title.contains("Video", ignoreCase = true)
+                    }.ifEmpty { tracks }
+            }
+
+            "Live Performances" -> {
+                tracks
+                    .filter {
+                        it.title.contains("Live", ignoreCase = true) ||
+                            it.title.contains("Tour", ignoreCase = true)
+                    }.ifEmpty { tracks }
+            }
+
+            else -> {
+                tracks
+            }
         }
-    }
 }

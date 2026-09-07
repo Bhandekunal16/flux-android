@@ -52,56 +52,58 @@ import com.flux.android.presentation.theme.LocalFluxColors
 fun LoginDialog(
     uiState: AuthUiState,
     onLogin: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val fluxColors = LocalFluxColors.current
     var email by remember { mutableStateOf("") }
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp))
-                .background(if (fluxColors.isDark) Color(0xFF191224) else Color.White)
-                .padding(24.dp)
-                .testTag("login_dialog")
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(if (fluxColors.isDark) Color(0xFF191224) else Color.White)
+                    .padding(24.dp)
+                    .testTag("login_dialog"),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Header with Close
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(42.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
-                        contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier
+                                .size(42.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = "Lock",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(22.dp)
+                            modifier = Modifier.size(22.dp),
                         )
                     }
 
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(36.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = fluxColors.textMuted
+                            tint = fluxColors.textMuted,
                         )
                     }
                 }
@@ -112,7 +114,7 @@ fun LoginDialog(
                     text = "Sign in to Flux",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -122,7 +124,7 @@ fun LoginDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     color = fluxColors.textMuted,
                     textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -132,27 +134,31 @@ fun LoginDialog(
                     onValueChange = { email = it },
                     label = { Text("Email address") },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { if (email.isNotEmpty() && !uiState.isLoading) onLogin(email) }
-                    ),
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Done,
+                        ),
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = { if (email.isNotEmpty() && !uiState.isLoading) onLogin(email) },
+                        ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
                             contentDescription = "Email",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = fluxColors.border
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("login_email_input")
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = fluxColors.border,
+                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .testTag("login_email_input"),
                 )
 
                 if (!uiState.errorMessage.isNullOrEmpty()) {
@@ -161,7 +167,7 @@ fun LoginDialog(
                         text = uiState.errorMessage,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
 
@@ -172,16 +178,17 @@ fun LoginDialog(
                     enabled = email.contains("@") && !uiState.isLoading,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("login_submit_btn")
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .testTag("login_submit_btn"),
                 ) {
                     if (uiState.isLoading) {
                         CircularProgressIndicator(
                             color = Color.White,
                             modifier = Modifier.size(20.dp),
-                            strokeWidth = 2.dp
+                            strokeWidth = 2.dp,
                         )
                     } else {
                         Text("Continue", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)

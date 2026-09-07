@@ -16,9 +16,10 @@ val EditorialPrimaryContainer = Color(0xFF4F378B)
 val EditorialOnPrimaryContainer = Color(0xFFEADDFF)
 val EditorialSecondaryContainer = Color(0xFF4A4458)
 val EditorialOnSecondaryContainer = Color(0xFFE8DEF8)
-val EditorialGradient = Brush.linearGradient(
-    listOf(Color(0xFFD0BCFF), Color(0xFFCCC2DC), Color(0xFF9A82DB))
-)
+val EditorialGradient =
+    Brush.linearGradient(
+        listOf(Color(0xFFD0BCFF), Color(0xFFCCC2DC), Color(0xFF9A82DB)),
+    )
 
 // 1. Sunset
 val SunsetPrimary = Color(0xFFFF5722)
@@ -45,15 +46,15 @@ val BerryTertiary = Color(0xFFF43F5E)
 val BerryGradient = Brush.linearGradient(listOf(Color(0xFFEC4899), Color(0xFF8B5CF6), Color(0xFFD946EF)))
 
 // Editorial Dark Surfaces & Typography Canvas
-val DarkCanvas = Color(0xFF1C1B1F)           // Charcoal Obsidian canvas
-val DarkSurface = Color(0xFF2B2930)          // Editorial Surface
-val DarkSurfaceElevated = Color(0xFF36343B)  // Card / Higher Elevation
-val DarkSurfaceHigh = Color(0xFF49454F)      // Inputs / Chips / Button containers
-val DarkBorder = Color(0xFF49454F)           // Editorial Border
-val DarkOutlineVariant = Color(0xFF938F99)   // Subtle Secondary Outline
-val DarkTextPrimary = Color(0xFFE6E1E5)      // Editorial Ivory text
-val DarkTextSecondary = Color(0xFFCAC4D0)    // Muted Editorial Silver text
-val DarkTextMuted = Color(0xFF938F99)        // Dimmed caption text
+val DarkCanvas = Color(0xFF1C1B1F) // Charcoal Obsidian canvas
+val DarkSurface = Color(0xFF2B2930) // Editorial Surface
+val DarkSurfaceElevated = Color(0xFF36343B) // Card / Higher Elevation
+val DarkSurfaceHigh = Color(0xFF49454F) // Inputs / Chips / Button containers
+val DarkBorder = Color(0xFF49454F) // Editorial Border
+val DarkOutlineVariant = Color(0xFF938F99) // Subtle Secondary Outline
+val DarkTextPrimary = Color(0xFFE6E1E5) // Editorial Ivory text
+val DarkTextSecondary = Color(0xFFCAC4D0) // Muted Editorial Silver text
+val DarkTextMuted = Color(0xFF938F99) // Dimmed caption text
 
 // Editorial Clean Crisp Light Surfaces
 val LightCanvas = Color(0xFFFEF7FF)

@@ -8,7 +8,6 @@ import com.flux.android.FluxApplication
 
 @OptIn(UnstableApi::class)
 class FluxMediaPlaybackService : MediaSessionService() {
-
     private var mediaSession: MediaSession? = null
 
     override fun onCreate() {
@@ -20,9 +19,7 @@ class FluxMediaPlaybackService : MediaSessionService() {
         }
     }
 
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
-        return mediaSession
-    }
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = mediaSession
 
     override fun onDestroy() {
         mediaSession?.run {

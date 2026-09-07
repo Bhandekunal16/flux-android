@@ -14,26 +14,25 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface FluxApi {
-
     @POST("api/auth")
     suspend fun authenticate(
-        @Body request: AuthRequest
+        @Body request: AuthRequest,
     ): Response<AuthResponse>
 
     @GET("api/music/trending")
     suspend fun getTrending(
-        @Query("region") region: String
+        @Query("region") region: String,
     ): Response<ResponseBody>
 
     @GET("api/music/search")
     suspend fun searchMusic(
         @Query("q") query: String,
-        @Query("pageToken") pageToken: String? = null
+        @Query("pageToken") pageToken: String? = null,
     ): Response<ResponseBody>
 
     @GET("api/music/genre")
     suspend fun getGenreMusic(
-        @Query("type") genre: String
+        @Query("type") genre: String,
     ): Response<ResponseBody>
 
     @GET("api/movies")
@@ -44,22 +43,22 @@ interface FluxApi {
 
     @POST("api/wishlist")
     suspend fun addWishlist(
-        @Body request: WishlistRequest
+        @Body request: WishlistRequest,
     ): Response<ResponseBody>
 
     @DELETE("api/wishlist/{id}")
     suspend fun deleteWishlist(
-        @Path("id") videoId: String
+        @Path("id") videoId: String,
     ): Response<ResponseBody>
 
     @GET("api/video/{id}")
     suspend fun getVideo(
-        @Path("id") videoId: String
+        @Path("id") videoId: String,
     ): Response<ResponseBody>
 
     @GET("api/stream")
     suspend fun getStream(
-        @Query("id") videoId: String
+        @Query("id") videoId: String,
     ): Response<StreamResponse>
 
     @GET("api/openapi")

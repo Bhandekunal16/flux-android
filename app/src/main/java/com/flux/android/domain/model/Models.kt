@@ -9,7 +9,7 @@ data class MusicTrack(
     val durationMs: Long? = null,
     val streamUrl: String? = null,
     val isVideo: Boolean = false,
-    val isWishlisted: Boolean = false
+    val isWishlisted: Boolean = false,
 )
 
 data class MovieItem(
@@ -18,14 +18,14 @@ data class MovieItem(
     val thumbnailUrl: String,
     val channelTitle: String? = null,
     val duration: String? = null,
-    val year: String? = null
+    val year: String? = null,
 )
 
 data class GenreItem(
     val id: String,
     val name: String,
     val queryType: String,
-    val description: String = ""
+    val description: String = "",
 )
 
 data class WishlistItem(
@@ -34,20 +34,21 @@ data class WishlistItem(
     val title: String,
     val artist: String,
     val thumbnailUrl: String,
-    val duration: String? = null
+    val duration: String? = null,
 ) {
-    fun toMusicTrack(): MusicTrack = MusicTrack(
-        id = videoId,
-        title = title,
-        artist = artist,
-        thumbnailUrl = thumbnailUrl,
-        duration = duration,
-        isWishlisted = true
-    )
+    fun toMusicTrack(): MusicTrack =
+        MusicTrack(
+            id = videoId,
+            title = title,
+            artist = artist,
+            thumbnailUrl = thumbnailUrl,
+            duration = duration,
+            isWishlisted = true,
+        )
 }
 
 data class UserSession(
     val email: String,
     val token: String,
-    val expiresAt: Long = 0L
+    val expiresAt: Long = 0L,
 )

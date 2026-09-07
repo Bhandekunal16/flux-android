@@ -53,31 +53,33 @@ fun MoviesScreen(
     uiState: MoviesUiState,
     onWatchTrailer: (MovieItem) -> Unit,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("movies_screen")
+        modifier =
+            modifier
+                .fillMaxSize()
+                .testTag("movies_screen"),
     ) {
         // Header
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Text(
                 text = "Movie Trailers & Cinema",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
             )
             Text(
                 text = "Official Hollywood & blockbuster cinema previews",
                 style = MaterialTheme.typography.bodySmall,
-                color = fluxColors.textMuted
+                color = fluxColors.textMuted,
             )
         }
 
@@ -85,33 +87,36 @@ fun MoviesScreen(
             uiState.isLoading -> {
                 ShimmerGrid(count = 4)
             }
+
             !uiState.errorMessage.isNullOrEmpty() && uiState.movies.isEmpty() -> {
                 ErrorStateView(
                     message = uiState.errorMessage,
-                    onRetry = onRetry
+                    onRetry = onRetry,
                 )
             }
+
             uiState.movies.isEmpty() -> {
                 EmptyStateView(
                     icon = Icons.Default.Movie,
                     title = "No Movie Trailers Found",
                     description = "We couldn't retrieve movie trailers at this time.",
                     actionLabel = "Retry",
-                    onAction = onRetry
+                    onAction = onRetry,
                 )
             }
+
             else -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(14.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.movies, key = { it.id }) { movie ->
                         MovieCard(
                             movie = movie,
-                            onWatchTrailer = { onWatchTrailer(movie) }
+                            onWatchTrailer = { onWatchTrailer(movie) },
                         )
                     }
                 }
@@ -124,46 +129,49 @@ fun MoviesScreen(
 fun MovieCard(
     movie: MovieItem,
     onWatchTrailer: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val fluxColors = LocalFluxColors.current
 
     FluxGlassCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .testTag("movie_card_${movie.id}"),
-        onClick = onWatchTrailer
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .testTag("movie_card_${movie.id}"),
+        onClick = onWatchTrailer,
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
             // Poster / Backdrop with play button overlay
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 10f)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(fluxColors.surfaceElevated)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 10f)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(fluxColors.surfaceElevated),
             ) {
                 AsyncImage(
                     model = movie.thumbnailUrl,
                     contentDescription = movie.title,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
 
                 // Play icon overlay
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.6f)),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center)
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.6f)),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Play Trailer",
                         tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
                     )
                 }
 
@@ -172,16 +180,17 @@ fun MovieCard(
                     Surface(
                         color = Color.Black.copy(alpha = 0.75f),
                         shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(6.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(6.dp),
                     ) {
                         Text(
                             text = movie.duration,
                             color = Color.White,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                         )
                     }
                 }
@@ -196,7 +205,7 @@ fun MovieCard(
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
             )
 
             // Studio / Year
@@ -208,7 +217,7 @@ fun MovieCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = fluxColors.textMuted,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
 
@@ -217,19 +226,21 @@ fun MovieCard(
             Button(
                 onClick = onWatchTrailer,
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = fluxColors.surfaceHigh,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(38.dp)
-                    .testTag("watch_trailer_btn_${movie.id}")
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = fluxColors.surfaceHigh,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(38.dp)
+                        .testTag("watch_trailer_btn_${movie.id}"),
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(18.dp),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Watch Trailer", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)

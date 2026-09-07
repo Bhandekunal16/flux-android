@@ -6,15 +6,16 @@ import okhttp3.Response
 
 class AuthInterceptor(
     private val authPreferences: AuthPreferences,
-    private val onUnauthorized: () -> Unit = {}
+    private val onUnauthorized: () -> Unit = {},
 ) : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
         val token = authPreferences.currentToken
 
-        val requestBuilder = original.newBuilder()
-            .header("Accept", "application/json")
+        val requestBuilder =
+            original
+                .newBuilder()
+                .header("Accept", "application/json")
 
         if (!token.isNullOrEmpty()) {
             requestBuilder.header("Authorization", "Bearer $token")

@@ -16,13 +16,12 @@ data class HomeUiState(
     val tracks: List<MusicTrack> = emptyList(),
     val isGrid: Boolean = true,
     val selectedRegion: String = "IN",
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 class HomeViewModel(
-    private val fluxRepository: FluxRepository
+    private val fluxRepository: FluxRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
@@ -37,9 +36,11 @@ class HomeViewModel(
                 is Resource.Success -> {
                     _uiState.update { it.copy(isLoading = false, tracks = result.data, errorMessage = null) }
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(isLoading = false, errorMessage = result.message) }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true) }
                 }

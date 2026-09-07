@@ -23,7 +23,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 enum class RepeatOption {
-    OFF, ALL, ONE
+    OFF,
+    ALL,
+    ONE,
 }
 
 data class PlayerUiState(
@@ -35,7 +37,7 @@ data class PlayerUiState(
     val repeatOption: RepeatOption = RepeatOption.OFF,
     val queue: List<MusicTrack> = emptyList(),
     val currentIndex: Int = -1,
-    val isFullPlayerVisible: Boolean = false
+    val isFullPlayerVisible: Boolean = false,
 ) {
     val hasTrack: Boolean get() = currentTrack != null
     val progressFraction: Float
@@ -46,55 +48,63 @@ data class PlayerUiState(
 class FluxPlayerManager(
     private val context: Context,
     private val repository: FluxRepository,
-    private val analytics: FluxAnalytics
+    private val analytics: FluxAnalytics,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + Job())
     private var progressJob: Job? = null
 
     val exoPlayer: ExoPlayer by lazy {
         ExoPlayer.Builder(context).build().apply {
-            addListener(object : Player.Listener {
-                override fun onIsPlayingChanged(isPlaying: Boolean) {
-                    _uiState.update { it.copy(isPlaying = isPlaying) }
-                    if (isPlaying) {
-                        startProgressUpdates()
-                    } else {
-                        stopProgressUpdates()
-                    }
-                }
-
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    when (playbackState) {
-                        Player.STATE_BUFFERING -> {
-                            _uiState.update { it.copy(isBuffering = true) }
+            addListener(
+                object : Player.Listener {
+                    override fun onIsPlayingChanged(isPlaying: Boolean) {
+                        _uiState.update { it.copy(isPlaying = isPlaying) }
+                        if (isPlaying) {
+                            startProgressUpdates()
+                        } else {
+                            stopProgressUpdates()
                         }
-                        Player.STATE_READY -> {
-                            val duration = exoPlayer.duration.coerceAtLeast(0L)
-                            _uiState.update {
-                                it.copy(
-                                    isBuffering = false,
-                                    durationMs = if (duration > 0) duration else (it.currentTrack?.durationMs ?: 180000L)
-                                )
+                    }
+
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        when (playbackState) {
+                            Player.STATE_BUFFERING -> {
+                                _uiState.update { it.copy(isBuffering = true) }
+                            }
+
+                            Player.STATE_READY -> {
+                                val duration = exoPlayer.duration.coerceAtLeast(0L)
+                                _uiState.update {
+                                    it.copy(
+                                        isBuffering = false,
+                                        durationMs = if (duration > 0) duration else (it.currentTrack?.durationMs ?: 180000L),
+                                    )
+                                }
+                            }
+
+                            Player.STATE_ENDED -> {
+                                _uiState.update { it.copy(isBuffering = false, isPlaying = false) }
+                                _uiState.value.currentTrack?.let { analytics.trackComplete(it.id) }
+                                handleTrackEnded()
+                            }
+
+                            Player.STATE_IDLE -> {
+                                _uiState.update { it.copy(isBuffering = false) }
                             }
                         }
-                        Player.STATE_ENDED -> {
-                            _uiState.update { it.copy(isBuffering = false, isPlaying = false) }
-                            _uiState.value.currentTrack?.let { analytics.trackComplete(it.id) }
-                            handleTrackEnded()
-                        }
-                        Player.STATE_IDLE -> {
-                            _uiState.update { it.copy(isBuffering = false) }
-                        }
                     }
-                }
-            })
+                },
+            )
         }
     }
 
     private val _uiState = MutableStateFlow(PlayerUiState())
     val uiState: StateFlow<PlayerUiState> = _uiState.asStateFlow()
 
-    fun playTrack(track: MusicTrack, newQueue: List<MusicTrack> = emptyList()) {
+    fun playTrack(
+        track: MusicTrack,
+        newQueue: List<MusicTrack> = emptyList(),
+    ) {
         val updatedQueue = if (newQueue.isNotEmpty()) newQueue else listOf(track)
         val index = updatedQueue.indexOfFirst { it.id == track.id }.coerceAtLeast(0)
 
@@ -104,7 +114,7 @@ class FluxPlayerManager(
                 queue = updatedQueue,
                 currentIndex = index,
                 isBuffering = true,
-                currentPositionMs = 0L
+                currentPositionMs = 0L,
             )
         }
 
@@ -125,17 +135,21 @@ class FluxPlayerManager(
                 playableUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
             }
 
-            val mediaMetadata = MediaMetadata.Builder()
-                .setTitle(track.title)
-                .setArtist(track.artist)
-                .setArtworkUri(android.net.Uri.parse(track.thumbnailUrl))
-                .build()
+            val mediaMetadata =
+                MediaMetadata
+                    .Builder()
+                    .setTitle(track.title)
+                    .setArtist(track.artist)
+                    .setArtworkUri(android.net.Uri.parse(track.thumbnailUrl))
+                    .build()
 
-            val mediaItem = MediaItem.Builder()
-                .setUri(playableUrl)
-                .setMediaId(track.id)
-                .setMediaMetadata(mediaMetadata)
-                .build()
+            val mediaItem =
+                MediaItem
+                    .Builder()
+                    .setUri(playableUrl)
+                    .setMediaId(track.id)
+                    .setMediaMetadata(mediaMetadata)
+                    .build()
 
             exoPlayer.setMediaItem(mediaItem)
             exoPlayer.prepare()
@@ -164,11 +178,12 @@ class FluxPlayerManager(
         val queue = state.queue
         if (queue.isEmpty()) return
 
-        val nextIndex = if (state.currentIndex + 1 < queue.size) {
-            state.currentIndex + 1
-        } else {
-            0
-        }
+        val nextIndex =
+            if (state.currentIndex + 1 < queue.size) {
+                state.currentIndex + 1
+            } else {
+                0
+            }
         val nextTrack = queue[nextIndex]
         playTrack(nextTrack, queue)
     }
@@ -182,21 +197,23 @@ class FluxPlayerManager(
         val queue = state.queue
         if (queue.isEmpty()) return
 
-        val prevIndex = if (state.currentIndex - 1 >= 0) {
-            state.currentIndex - 1
-        } else {
-            queue.size - 1
-        }
+        val prevIndex =
+            if (state.currentIndex - 1 >= 0) {
+                state.currentIndex - 1
+            } else {
+                queue.size - 1
+            }
         val prevTrack = queue[prevIndex]
         playTrack(prevTrack, queue)
     }
 
     fun toggleRepeat() {
-        val nextOption = when (_uiState.value.repeatOption) {
-            RepeatOption.OFF -> RepeatOption.ALL
-            RepeatOption.ALL -> RepeatOption.ONE
-            RepeatOption.ONE -> RepeatOption.OFF
-        }
+        val nextOption =
+            when (_uiState.value.repeatOption) {
+                RepeatOption.OFF -> RepeatOption.ALL
+                RepeatOption.ALL -> RepeatOption.ONE
+                RepeatOption.ONE -> RepeatOption.OFF
+            }
         _uiState.update { it.copy(repeatOption = nextOption) }
         when (nextOption) {
             RepeatOption.OFF -> exoPlayer.repeatMode = Player.REPEAT_MODE_OFF
@@ -215,9 +232,11 @@ class FluxPlayerManager(
                 seekTo(0)
                 exoPlayer.play()
             }
+
             RepeatOption.ALL -> {
                 next()
             }
+
             RepeatOption.OFF -> {
                 val state = _uiState.value
                 if (state.currentIndex + 1 < state.queue.size) {
@@ -229,21 +248,22 @@ class FluxPlayerManager(
 
     private fun startProgressUpdates() {
         progressJob?.cancel()
-        progressJob = scope.launch {
-            while (isActive) {
-                if (exoPlayer.isPlaying) {
-                    val pos = exoPlayer.currentPosition.coerceAtLeast(0L)
-                    val dur = exoPlayer.duration.coerceAtLeast(0L)
-                    _uiState.update {
-                        it.copy(
-                            currentPositionMs = pos,
-                            durationMs = if (dur > 0) dur else it.durationMs
-                        )
+        progressJob =
+            scope.launch {
+                while (isActive) {
+                    if (exoPlayer.isPlaying) {
+                        val pos = exoPlayer.currentPosition.coerceAtLeast(0L)
+                        val dur = exoPlayer.duration.coerceAtLeast(0L)
+                        _uiState.update {
+                            it.copy(
+                                currentPositionMs = pos,
+                                durationMs = if (dur > 0) dur else it.durationMs,
+                            )
+                        }
                     }
+                    delay(500)
                 }
-                delay(500)
             }
-        }
     }
 
     private fun stopProgressUpdates() {

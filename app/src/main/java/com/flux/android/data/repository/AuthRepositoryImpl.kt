@@ -13,9 +13,8 @@ import java.io.IOException
 class AuthRepositoryImpl(
     private val api: FluxApi,
     private val authPreferences: AuthPreferences,
-    private val analytics: FluxAnalytics
+    private val analytics: FluxAnalytics,
 ) : AuthRepository {
-
     override suspend fun login(email: String): Resource<UserSession> {
         val trimmed = email.trim()
         if (trimmed.isEmpty() || !trimmed.contains("@")) {
@@ -39,12 +38,13 @@ class AuthRepositoryImpl(
                 }
             } else {
                 val code = response.code()
-                val errorMsg = when (code) {
-                    400 -> "Invalid email address format."
-                    429 -> "Too many sign-in attempts. Please try again later."
-                    500 -> "Flux authentication server error. Please try again."
-                    else -> "Authentication failed (code $code)."
-                }
+                val errorMsg =
+                    when (code) {
+                        400 -> "Invalid email address format."
+                        429 -> "Too many sign-in attempts. Please try again later."
+                        500 -> "Flux authentication server error. Please try again."
+                        else -> "Authentication failed (code $code)."
+                    }
                 Resource.Error(errorMsg, code = code)
             }
         } catch (e: IOException) {

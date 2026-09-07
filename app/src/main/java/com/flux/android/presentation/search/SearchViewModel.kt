@@ -21,13 +21,12 @@ data class SearchUiState(
     val nextPageToken: String? = null,
     val isGrid: Boolean = false,
     val errorMessage: String? = null,
-    val recentSearches: List<String> = listOf("Arijit Singh", "Ed Sheeran", "Taylor Swift", "Badshah", "Dua Lipa")
+    val recentSearches: List<String> = listOf("Arijit Singh", "Ed Sheeran", "Taylor Swift", "Badshah", "Dua Lipa"),
 )
 
 class SearchViewModel(
-    private val fluxRepository: FluxRepository
+    private val fluxRepository: FluxRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
@@ -42,17 +41,24 @@ class SearchViewModel(
             return
         }
 
-        searchJob = viewModelScope.launch {
-            delay(400) // 400ms debounce
-            performSearch(newQuery.trim(), null)
-        }
+        searchJob =
+            viewModelScope.launch {
+                delay(400) // 400ms debounce
+                performSearch(newQuery.trim(), null)
+            }
     }
 
-    fun performSearch(query: String, pageToken: String?) {
+    fun performSearch(
+        query: String,
+        pageToken: String?,
+    ) {
         val isFirstPage = pageToken == null
         _uiState.update {
-            if (isFirstPage) it.copy(isLoading = true, errorMessage = null)
-            else it.copy(isLoadingMore = true)
+            if (isFirstPage) {
+                it.copy(isLoading = true, errorMessage = null)
+            } else {
+                it.copy(isLoadingMore = true)
+            }
         }
 
         viewModelScope.launch {
@@ -61,9 +67,12 @@ class SearchViewModel(
                     val (tracks, token) = result.data
                     _uiState.update { current ->
                         val combined = if (isFirstPage) tracks else current.results + tracks
-                        val updatedRecent = if (isFirstPage && query.isNotEmpty() && !current.recentSearches.contains(query)) {
-                            (listOf(query) + current.recentSearches).take(8)
-                        } else current.recentSearches
+                        val updatedRecent =
+                            if (isFirstPage && query.isNotEmpty() && !current.recentSearches.contains(query)) {
+                                (listOf(query) + current.recentSearches).take(8)
+                            } else {
+                                current.recentSearches
+                            }
 
                         current.copy(
                             isLoading = false,
@@ -71,19 +80,21 @@ class SearchViewModel(
                             results = combined,
                             nextPageToken = token,
                             recentSearches = updatedRecent,
-                            errorMessage = null
+                            errorMessage = null,
                         )
                     }
                 }
+
                 is Resource.Error -> {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
                             isLoadingMore = false,
-                            errorMessage = result.message
+                            errorMessage = result.message,
                         )
                     }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true) }
                 }

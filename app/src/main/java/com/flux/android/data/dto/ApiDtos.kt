@@ -1,34 +1,34 @@
 package com.flux.android.data.dto
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import com.flux.android.domain.model.MovieItem
 import com.flux.android.domain.model.MusicTrack
 import com.flux.android.domain.model.WishlistItem
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AuthRequest(
-    @Json(name = "email") val email: String
+    @Json(name = "email") val email: String,
 )
 
 @JsonClass(generateAdapter = true)
 data class AuthResponse(
     @Json(name = "token") val token: String? = null,
     @Json(name = "message") val message: String? = null,
-    @Json(name = "user") val user: UserDto? = null
+    @Json(name = "user") val user: UserDto? = null,
 )
 
 @JsonClass(generateAdapter = true)
 data class UserDto(
     @Json(name = "email") val email: String? = null,
-    @Json(name = "id") val id: String? = null
+    @Json(name = "id") val id: String? = null,
 )
 
 @JsonClass(generateAdapter = true)
 data class ThumbnailInfo(
     @Json(name = "url") val url: String? = null,
     @Json(name = "width") val width: Int? = null,
-    @Json(name = "height") val height: Int? = null
+    @Json(name = "height") val height: Int? = null,
 )
 
 @JsonClass(generateAdapter = true)
@@ -37,7 +37,7 @@ data class ThumbnailsDto(
     @Json(name = "medium") val medium: ThumbnailInfo? = null,
     @Json(name = "high") val high: ThumbnailInfo? = null,
     @Json(name = "standard") val standard: ThumbnailInfo? = null,
-    @Json(name = "maxres") val maxres: ThumbnailInfo? = null
+    @Json(name = "maxres") val maxres: ThumbnailInfo? = null,
 ) {
     fun bestUrl(): String? = maxres?.url ?: high?.url ?: medium?.url ?: default?.url ?: standard?.url
 }
@@ -48,17 +48,17 @@ data class SnippetDto(
     @Json(name = "description") val description: String? = null,
     @Json(name = "channelTitle") val channelTitle: String? = null,
     @Json(name = "publishedAt") val publishedAt: String? = null,
-    @Json(name = "thumbnails") val thumbnails: ThumbnailsDto? = null
+    @Json(name = "thumbnails") val thumbnails: ThumbnailsDto? = null,
 )
 
 @JsonClass(generateAdapter = true)
 data class ContentDetailsDto(
-    @Json(name = "duration") val duration: String? = null
+    @Json(name = "duration") val duration: String? = null,
 )
 
 @JsonClass(generateAdapter = true)
 data class VideoIdDto(
-    @Json(name = "videoId") val videoId: String? = null
+    @Json(name = "videoId") val videoId: String? = null,
 )
 
 @JsonClass(generateAdapter = true)
@@ -78,15 +78,17 @@ data class RawMediaItemDto(
     @Json(name = "streamUrl") val streamUrl: String? = null,
     @Json(name = "url") val url: String? = null,
     @Json(name = "isVideo") val isVideo: Boolean? = null,
-
     // YouTube API nested properties
     @Json(name = "snippet") val snippet: SnippetDto? = null,
-    @Json(name = "contentDetails") val contentDetails: ContentDetailsDto? = null
+    @Json(name = "contentDetails") val contentDetails: ContentDetailsDto? = null,
 ) {
     fun extractId(): String {
         videoId?.let { if (it.isNotEmpty()) return it }
         when (idRaw) {
-            is String -> if (idRaw.isNotEmpty()) return idRaw
+            is String -> {
+                if (idRaw.isNotEmpty()) return idRaw
+            }
+
             is Map<*, *> -> {
                 val vid = idRaw["videoId"] as? String
                 if (!vid.isNullOrEmpty()) return vid
@@ -95,13 +97,9 @@ data class RawMediaItemDto(
         return ""
     }
 
-    fun extractTitle(): String {
-        return title ?: name ?: snippet?.title ?: "Unknown Title"
-    }
+    fun extractTitle(): String = title ?: name ?: snippet?.title ?: "Unknown Title"
 
-    fun extractArtist(): String {
-        return channelTitle ?: artist ?: author ?: snippet?.channelTitle ?: "Flux Artist"
-    }
+    fun extractArtist(): String = channelTitle ?: artist ?: author ?: snippet?.channelTitle ?: "Flux Artist"
 
     fun extractThumbnail(): String {
         thumbnailUrl?.let { if (it.isNotEmpty()) return it }
@@ -111,9 +109,7 @@ data class RawMediaItemDto(
         return if (id.isNotEmpty()) "https://i.ytimg.com/vi/$id/hqdefault.jpg" else ""
     }
 
-    fun extractDuration(): String? {
-        return duration ?: durationText ?: contentDetails?.duration?.let { formatIsoDuration(it) }
-    }
+    fun extractDuration(): String? = duration ?: durationText ?: contentDetails?.duration?.let { formatIsoDuration(it) }
 
     fun toMusicTrack(forceVideo: Boolean = false): MusicTrack {
         val resolvedId = extractId()
@@ -124,22 +120,21 @@ data class RawMediaItemDto(
             thumbnailUrl = extractThumbnail(),
             duration = extractDuration(),
             streamUrl = streamUrl ?: url,
-            isVideo = forceVideo || (isVideo ?: false)
+            isVideo = forceVideo || (isVideo ?: false),
         )
     }
 
-    fun toMovieItem(): MovieItem {
-        return MovieItem(
+    fun toMovieItem(): MovieItem =
+        MovieItem(
             id = extractId(),
             title = extractTitle(),
             thumbnailUrl = extractThumbnail(),
             channelTitle = extractArtist(),
-            duration = extractDuration()
+            duration = extractDuration(),
         )
-    }
 
-    private fun formatIsoDuration(iso: String): String {
-        return try {
+    private fun formatIsoDuration(iso: String): String =
+        try {
             val clean = iso.removePrefix("PT")
             val hours = if (clean.contains("H")) clean.substringBefore("H").toIntOrNull() ?: 0 else 0
             val remainderAfterH = if (clean.contains("H")) clean.substringAfter("H") else clean
@@ -154,7 +149,6 @@ data class RawMediaItemDto(
         } catch (_: Exception) {
             iso
         }
-    }
 }
 
 @JsonClass(generateAdapter = true)
@@ -162,7 +156,7 @@ data class MediaListResponse(
     @Json(name = "items") val items: List<RawMediaItemDto>? = null,
     @Json(name = "results") val results: List<RawMediaItemDto>? = null,
     @Json(name = "data") val data: List<RawMediaItemDto>? = null,
-    @Json(name = "nextPageToken") val nextPageToken: String? = null
+    @Json(name = "nextPageToken") val nextPageToken: String? = null,
 ) {
     fun allItems(): List<RawMediaItemDto> = items ?: results ?: data ?: emptyList()
 }
@@ -172,7 +166,7 @@ data class StreamResponse(
     @Json(name = "url") val url: String? = null,
     @Json(name = "streamUrl") val streamUrl: String? = null,
     @Json(name = "audioUrl") val audioUrl: String? = null,
-    @Json(name = "playableUrl") val playableUrl: String? = null
+    @Json(name = "playableUrl") val playableUrl: String? = null,
 ) {
     fun resolvedUrl(): String? = streamUrl ?: url ?: audioUrl ?: playableUrl
 }
@@ -183,7 +177,7 @@ data class WishlistRequest(
     @Json(name = "title") val title: String,
     @Json(name = "thumbnailUrl") val thumbnailUrl: String,
     @Json(name = "channelTitle") val channelTitle: String? = null,
-    @Json(name = "duration") val duration: String? = null
+    @Json(name = "duration") val duration: String? = null,
 )
 
 @JsonClass(generateAdapter = true)
@@ -196,7 +190,7 @@ data class WishlistItemDto(
     @Json(name = "channelTitle") val channelTitle: String? = null,
     @Json(name = "thumbnailUrl") val thumbnailUrl: String? = null,
     @Json(name = "thumbnail") val thumbnail: String? = null,
-    @Json(name = "duration") val duration: String? = null
+    @Json(name = "duration") val duration: String? = null,
 ) {
     fun toDomain(): WishlistItem {
         val resolvedVideoId = videoId ?: id ?: ""
@@ -205,8 +199,10 @@ data class WishlistItemDto(
             videoId = resolvedVideoId,
             title = title ?: "Saved Track",
             artist = artist ?: channelTitle ?: "Flux Artist",
-            thumbnailUrl = thumbnailUrl ?: thumbnail ?: if (resolvedVideoId.isNotEmpty()) "https://i.ytimg.com/vi/$resolvedVideoId/hqdefault.jpg" else "",
-            duration = duration
+            thumbnailUrl =
+                thumbnailUrl ?: thumbnail
+                    ?: if (resolvedVideoId.isNotEmpty()) "https://i.ytimg.com/vi/$resolvedVideoId/hqdefault.jpg" else "",
+            duration = duration,
         )
     }
 }
@@ -215,7 +211,7 @@ data class WishlistItemDto(
 data class WishlistResponse(
     @Json(name = "items") val items: List<WishlistItemDto>? = null,
     @Json(name = "data") val data: List<WishlistItemDto>? = null,
-    @Json(name = "wishlist") val wishlist: List<WishlistItemDto>? = null
+    @Json(name = "wishlist") val wishlist: List<WishlistItemDto>? = null,
 ) {
     fun allItems(): List<WishlistItemDto> = items ?: data ?: wishlist ?: emptyList()
 }

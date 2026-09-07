@@ -70,13 +70,13 @@ enum class NavigationTab(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val testTag: String
+    val testTag: String,
 ) {
     HOME("Home", Icons.Filled.Home, Icons.Outlined.Home, "nav_tab_home"),
     VIDEO("Video", Icons.Filled.SmartDisplay, Icons.Outlined.SmartDisplay, "nav_tab_video"),
     GENRES("Genres", Icons.Filled.Category, Icons.Outlined.Category, "nav_tab_genres"),
     MOVIES("Movies", Icons.Filled.Movie, Icons.Outlined.Movie, "nav_tab_movies"),
-    WISHLIST("Wishlist", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, "nav_tab_wishlist")
+    WISHLIST("Wishlist", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, "nav_tab_wishlist"),
 }
 
 @Composable
@@ -89,7 +89,7 @@ fun FluxMainNavigation(
     searchViewModel: SearchViewModel,
     authViewModel: AuthViewModel,
     themeViewModel: ThemeViewModel,
-    playerManager: FluxPlayerManager
+    playerManager: FluxPlayerManager,
 ) {
     val fluxColors = LocalFluxColors.current
 
@@ -112,24 +112,26 @@ fun FluxMainNavigation(
     val userSession by authViewModel.session.collectAsState()
     val themeConfig by themeViewModel.themeConfig.collectAsState()
 
-    val wishlistedIds = remember(wishlistUiState.items) {
-        wishlistUiState.items.map { it.videoId }.toSet()
-    }
+    val wishlistedIds =
+        remember(wishlistUiState.items) {
+            wishlistUiState.items.map { it.videoId }.toSet()
+        }
 
     Scaffold(
         contentWindowInsets = WindowInsets.navigationBars,
         bottomBar = {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background),
             ) {
                 // Persistent Mini Player above the Navigation Bar
                 FluxMiniPlayer(
                     playerState = playerState,
                     onPlayPause = { playerManager.togglePlayPause() },
                     onNext = { playerManager.next() },
-                    onOpenFullPlayer = { playerManager.setFullPlayerVisible(true) }
+                    onOpenFullPlayer = { playerManager.setFullPlayerVisible(true) },
                 )
 
                 // Bottom Navigation Bar
@@ -137,11 +139,12 @@ fun FluxMainNavigation(
                     containerColor = MaterialTheme.colorScheme.background,
                     contentColor = MaterialTheme.colorScheme.onBackground,
                     tonalElevation = 0.dp,
-                    modifier = Modifier.border(
-                        width = 1.dp,
-                        color = fluxColors.border,
-                        shape = androidx.compose.ui.graphics.RectangleShape
-                    )
+                    modifier =
+                        Modifier.border(
+                            width = 1.dp,
+                            color = fluxColors.border,
+                            shape = androidx.compose.ui.graphics.RectangleShape,
+                        ),
                 ) {
                     NavigationTab.values().forEach { tab ->
                         val isSelected = currentTab == tab && !isSearchOpen
@@ -154,35 +157,37 @@ fun FluxMainNavigation(
                             icon = {
                                 Icon(
                                     imageVector = if (isSelected) tab.selectedIcon else tab.unselectedIcon,
-                                    contentDescription = tab.title
+                                    contentDescription = tab.title,
                                 )
                             },
                             label = {
                                 Text(
                                     text = tab.title,
                                     fontSize = 11.sp,
-                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                                 )
                             },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.primary,
-                                selectedTextColor = MaterialTheme.colorScheme.primary,
-                                indicatorColor = fluxColors.surfaceHigh,
-                                unselectedIconColor = fluxColors.textMuted,
-                                unselectedTextColor = fluxColors.textMuted
-                            ),
-                            modifier = Modifier.testTag(tab.testTag)
+                            colors =
+                                NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = fluxColors.surfaceHigh,
+                                    unselectedIconColor = fluxColors.textMuted,
+                                    unselectedTextColor = fluxColors.textMuted,
+                                ),
+                            modifier = Modifier.testTag(tab.testTag),
                         )
                     }
                 }
             }
-        }
+        },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background),
         ) {
             if (isSearchOpen) {
                 SearchScreen(
@@ -197,7 +202,7 @@ fun FluxMainNavigation(
                     onToggleWishlist = { track ->
                         wishlistViewModel.toggleWishlist(track, onRequireLogin = { authViewModel.showLogin() })
                     },
-                    onBack = { isSearchOpen = false }
+                    onBack = { isSearchOpen = false },
                 )
             } else {
                 when (currentTab) {
@@ -214,9 +219,10 @@ fun FluxMainNavigation(
                             onSetRegion = { homeViewModel.setRegion(it) },
                             onRetry = { homeViewModel.loadTrending() },
                             onOpenSearch = { isSearchOpen = true },
-                            onOpenSettings = { showSettingsDialog = true }
+                            onOpenSettings = { showSettingsDialog = true },
                         )
                     }
+
                     NavigationTab.VIDEO -> {
                         VideoScreen(
                             uiState = videoUiState,
@@ -229,9 +235,10 @@ fun FluxMainNavigation(
                                 wishlistViewModel.toggleWishlist(track, onRequireLogin = { authViewModel.showLogin() })
                             },
                             onSetViewMode = { videoViewModel.setViewMode(it) },
-                            onRetry = { videoViewModel.loadVideos() }
+                            onRetry = { videoViewModel.loadVideos() },
                         )
                     }
+
                     NavigationTab.GENRES -> {
                         GenreScreen(
                             uiState = genreUiState,
@@ -243,25 +250,28 @@ fun FluxMainNavigation(
                                 wishlistViewModel.toggleWishlist(track, onRequireLogin = { authViewModel.showLogin() })
                             },
                             onSetViewMode = { genreViewModel.setViewMode(it) },
-                            onRetry = { genreViewModel.loadGenreTracks() }
+                            onRetry = { genreViewModel.loadGenreTracks() },
                         )
                     }
+
                     NavigationTab.MOVIES -> {
                         MoviesScreen(
                             uiState = moviesUiState,
                             onWatchTrailer = { movie ->
-                                activeVideoTrack = MusicTrack(
-                                    id = movie.id,
-                                    title = movie.title,
-                                    artist = movie.channelTitle ?: "Movie Trailer",
-                                    thumbnailUrl = movie.thumbnailUrl,
-                                    duration = movie.duration,
-                                    isVideo = true
-                                )
+                                activeVideoTrack =
+                                    MusicTrack(
+                                        id = movie.id,
+                                        title = movie.title,
+                                        artist = movie.channelTitle ?: "Movie Trailer",
+                                        thumbnailUrl = movie.thumbnailUrl,
+                                        duration = movie.duration,
+                                        isVideo = true,
+                                    )
                             },
-                            onRetry = { moviesViewModel.loadMovies() }
+                            onRetry = { moviesViewModel.loadMovies() },
                         )
                     }
+
                     NavigationTab.WISHLIST -> {
                         WishlistScreen(
                             uiState = wishlistUiState,
@@ -276,7 +286,7 @@ fun FluxMainNavigation(
                             onSetViewMode = { wishlistViewModel.setViewMode(it) },
                             onOpenLogin = { authViewModel.showLogin() },
                             onRetry = { wishlistViewModel.loadWishlist() },
-                            onDiscover = { currentTab = NavigationTab.HOME }
+                            onDiscover = { currentTab = NavigationTab.HOME },
                         )
                     }
                 }
@@ -296,7 +306,7 @@ fun FluxMainNavigation(
                         playerManager.setFullPlayerVisible(false)
                         activeVideoTrack = track
                     },
-                    onDismiss = { playerManager.setFullPlayerVisible(false) }
+                    onDismiss = { playerManager.setFullPlayerVisible(false) },
                 )
             }
 
@@ -306,7 +316,7 @@ fun FluxMainNavigation(
                     videoId = videoTrack.id,
                     title = videoTrack.title,
                     channelTitle = videoTrack.artist,
-                    onDismiss = { activeVideoTrack = null }
+                    onDismiss = { activeVideoTrack = null },
                 )
             }
 
@@ -319,7 +329,7 @@ fun FluxMainNavigation(
                             wishlistViewModel.loadWishlist()
                         }
                     },
-                    onDismiss = { authViewModel.dismissLogin() }
+                    onDismiss = { authViewModel.dismissLogin() },
                 )
             }
 
@@ -332,7 +342,7 @@ fun FluxMainNavigation(
                     onSetAccentTheme = { themeViewModel.setAccentTheme(it) },
                     onLogout = { authViewModel.logout() },
                     onOpenLogin = { authViewModel.showLogin() },
-                    onDismiss = { showSettingsDialog = false }
+                    onDismiss = { showSettingsDialog = false },
                 )
             }
         }

@@ -6,8 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun login(email: String): Resource<UserSession>
+
     suspend fun logout()
+
     fun getSession(): Flow<UserSession?>
+
     fun getCurrentToken(): String?
+
     fun isLoggedIn(): Boolean
 }

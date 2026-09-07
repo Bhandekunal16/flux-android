@@ -61,20 +61,21 @@ fun VideoPlayerModal(
     videoId: String,
     title: String,
     channelTitle: String? = null,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val fluxColors = LocalFluxColors.current
     var isFullScreen by remember { mutableStateOf(false) }
 
-    val activity = remember(context) {
-        var ctx = context
-        while (ctx is android.content.ContextWrapper) {
-            if (ctx is android.app.Activity) return@remember ctx
-            ctx = ctx.baseContext
+    val activity =
+        remember(context) {
+            var ctx = context
+            while (ctx is android.content.ContextWrapper) {
+                if (ctx is android.app.Activity) return@remember ctx
+                ctx = ctx.baseContext
+            }
+            null
         }
-        null
-    }
 
     DisposableEffect(isFullScreen) {
         if (isFullScreen) {
@@ -95,58 +96,63 @@ fun VideoPlayerModal(
         }
     }
 
-    val embedHtml = remember(videoId) {
-        """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; background-color: #000; }
-                body, html { width: 100%; height: 100%; overflow: hidden; background: #000; }
-                iframe { width: 100%; height: 100%; border: none; }
-            </style>
-        </head>
-        <body>
-            <iframe 
-                src="https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
-        </body>
-        </html>
-        """.trimIndent()
-    }
+    val embedHtml =
+        remember(videoId) {
+            """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; background-color: #000; }
+                    body, html { width: 100%; height: 100%; overflow: hidden; background: #000; }
+                    iframe { width: 100%; height: 100%; border: none; }
+                </style>
+            </head>
+            <body>
+                <iframe 
+                    src="https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </body>
+            </html>
+            """.trimIndent()
+        }
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnBackPress = true,
-            dismissOnClickOutside = !isFullScreen
-        )
+        properties =
+            DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = true,
+                dismissOnClickOutside = !isFullScreen,
+            ),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = if (isFullScreen) 1f else 0.88f))
-                .padding(if (isFullScreen) 0.dp else 16.dp)
-                .testTag("video_player_modal"),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = if (isFullScreen) 1f else 0.88f))
+                    .padding(if (isFullScreen) 0.dp else 16.dp)
+                    .testTag("video_player_modal"),
+            contentAlignment = Alignment.Center,
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(if (isFullScreen) RoundedCornerShape(0.dp) else RoundedCornerShape(20.dp))
-                    .background(Color(0xFF0F0B17))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(if (isFullScreen) RoundedCornerShape(0.dp) else RoundedCornerShape(20.dp))
+                        .background(Color(0xFF0F0B17)),
             ) {
                 // Header (hidden in full-screen landscape for clean theater mode)
                 if (!isFullScreen) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
@@ -155,7 +161,7 @@ fun VideoPlayerModal(
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
                             )
                             if (!channelTitle.isNullOrEmpty()) {
                                 Spacer(modifier = Modifier.height(2.dp))
@@ -163,7 +169,7 @@ fun VideoPlayerModal(
                                     text = channelTitle,
                                     style = MaterialTheme.typography.bodySmall,
                                     color = fluxColors.textMuted,
-                                    maxLines = 1
+                                    maxLines = 1,
                                 )
                             }
                         }
@@ -174,43 +180,44 @@ fun VideoPlayerModal(
                                 val ytIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId"))
                                 context.startActivity(ytIntent)
                             },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(36.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.OpenInNew,
                                 contentDescription = "Open in YouTube",
                                 tint = Color.LightGray,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(18.dp),
                             )
                         }
 
                         // Fullscreen toggle
                         IconButton(
                             onClick = { isFullScreen = true },
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(36.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Fullscreen,
                                 contentDescription = "Full screen",
                                 tint = Color.White,
-                                modifier = Modifier.size(22.dp)
+                                modifier = Modifier.size(22.dp),
                             )
                         }
 
                         // Close button
                         IconButton(
                             onClick = onDismiss,
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.1f))
-                                .testTag("close_video_player")
+                            modifier =
+                                Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White.copy(alpha = 0.1f))
+                                    .testTag("close_video_player"),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Close",
                                 tint = Color.White,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(20.dp),
                             )
                         }
                     }
@@ -218,21 +225,23 @@ fun VideoPlayerModal(
 
                 // Video container (Aspect 16:9 in dialog, FillMaxSize in fullscreen)
                 Box(
-                    modifier = if (isFullScreen) {
-                        Modifier.fillMaxSize()
-                    } else {
-                        Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                    }
+                    modifier =
+                        if (isFullScreen) {
+                            Modifier.fillMaxSize()
+                        } else {
+                            Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(16f / 9f)
+                        },
                 ) {
                     AndroidView(
                         factory = { ctx ->
                             WebView(ctx).apply {
-                                layoutParams = ViewGroup.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT
-                                )
+                                layoutParams =
+                                    ViewGroup.LayoutParams(
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                    )
                                 settings.apply {
                                     javaScriptEnabled = true
                                     domStorageEnabled = true
@@ -242,35 +251,38 @@ fun VideoPlayerModal(
                                     useWideViewPort = true
                                 }
                                 webChromeClient = WebChromeClient()
-                                webViewClient = object : WebViewClient() {
-                                    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                                        return false
+                                webViewClient =
+                                    object : WebViewClient() {
+                                        override fun shouldOverrideUrlLoading(
+                                            view: WebView?,
+                                            url: String?,
+                                        ): Boolean = false
                                     }
-                                }
                                 loadDataWithBaseURL("https://www.youtube.com", embedHtml, "text/html", "UTF-8", null)
                             }
                         },
                         update = { webView ->
                             // Maintain playback state
                         },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
 
                     // Exit fullscreen button overlay when in fullscreen mode
                     if (isFullScreen) {
                         IconButton(
                             onClick = { isFullScreen = false },
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(16.dp)
-                                .size(44.dp)
-                                .clip(CircleShape)
-                                .background(Color.Black.copy(alpha = 0.6f))
+                            modifier =
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(16.dp)
+                                    .size(44.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Black.copy(alpha = 0.6f)),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.FullscreenExit,
                                 contentDescription = "Exit Fullscreen",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }

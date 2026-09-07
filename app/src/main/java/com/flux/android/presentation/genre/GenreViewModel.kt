@@ -18,13 +18,12 @@ data class GenreUiState(
     val isLoadingTracks: Boolean = false,
     val tracks: List<MusicTrack> = emptyList(),
     val isGrid: Boolean = true,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 class GenreViewModel(
-    private val fluxRepository: FluxRepository
+    private val fluxRepository: FluxRepository,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(GenreUiState())
     val uiState: StateFlow<GenreUiState> = _uiState.asStateFlow()
 
@@ -50,9 +49,11 @@ class GenreViewModel(
                 is Resource.Success -> {
                     _uiState.update { it.copy(isLoadingTracks = false, tracks = result.data, errorMessage = null) }
                 }
+
                 is Resource.Error -> {
                     _uiState.update { it.copy(isLoadingTracks = false, errorMessage = result.message) }
                 }
+
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoadingTracks = true) }
                 }

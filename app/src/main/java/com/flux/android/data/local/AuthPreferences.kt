@@ -15,30 +15,31 @@ import java.io.IOException
 
 private val Context.authDataStore: DataStore<Preferences> by preferencesDataStore(name = "flux_auth_prefs")
 
-class AuthPreferences(private val context: Context) {
-
+class AuthPreferences(
+    private val context: Context,
+) {
     private object PreferencesKeys {
         val TOKEN = stringPreferencesKey("auth_token")
         val EMAIL = stringPreferencesKey("auth_email")
     }
 
-    val userSession: Flow<UserSession?> = context.authDataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
+    val userSession: Flow<UserSession?> =
+        context.authDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }.map { preferences ->
+                val token = preferences[PreferencesKeys.TOKEN]
+                val email = preferences[PreferencesKeys.EMAIL]
+                if (!token.isNullOrEmpty() && !email.isNullOrEmpty()) {
+                    UserSession(email = email, token = token)
+                } else {
+                    null
+                }
             }
-        }
-        .map { preferences ->
-            val token = preferences[PreferencesKeys.TOKEN]
-            val email = preferences[PreferencesKeys.EMAIL]
-            if (!token.isNullOrEmpty() && !email.isNullOrEmpty()) {
-                UserSession(email = email, token = token)
-            } else {
-                null
-            }
-        }
 
     // In-memory cache of current token for synchronous OkHttp interceptor access
     @Volatile
@@ -49,7 +50,10 @@ class AuthPreferences(private val context: Context) {
     var currentEmail: String? = null
         private set
 
-    suspend fun saveSession(email: String, token: String) {
+    suspend fun saveSession(
+        email: String,
+        token: String,
+    ) {
         currentToken = token
         currentEmail = email
         context.authDataStore.edit { preferences ->

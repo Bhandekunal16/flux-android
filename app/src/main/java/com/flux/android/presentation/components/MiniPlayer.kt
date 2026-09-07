@@ -51,7 +51,7 @@ fun FluxMiniPlayer(
     onPlayPause: () -> Unit,
     onNext: () -> Unit,
     onOpenFullPlayer: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val track = playerState.currentTrack
     val fluxColors = LocalFluxColors.current
@@ -60,50 +60,53 @@ fun FluxMiniPlayer(
         visible = track != null,
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-        modifier = modifier
+        modifier = modifier,
     ) {
         if (track == null) return@AnimatedVisibility
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(fluxColors.cardBackground)
-                .border(
-                    width = 1.dp,
-                    color = fluxColors.border,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .clickable { onOpenFullPlayer() }
-                .testTag("mini_player_container")
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(fluxColors.cardBackground)
+                    .border(
+                        width = 1.dp,
+                        color = fluxColors.border,
+                        shape = RoundedCornerShape(16.dp),
+                    ).clickable { onOpenFullPlayer() }
+                    .testTag("mini_player_container"),
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 // Top Slim Progress Bar
                 LinearProgressIndicator(
                     progress = { playerState.progressFraction },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.5.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(2.5.dp),
                     color = MaterialTheme.colorScheme.primary,
-                    trackColor = fluxColors.surfaceHigh
+                    trackColor = fluxColors.surfaceHigh,
                 )
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Track Artwork
                     AsyncImage(
                         model = track.thumbnailUrl,
                         contentDescription = track.title,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(fluxColors.surfaceHigh)
+                        modifier =
+                            Modifier
+                                .size(44.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(fluxColors.surfaceHigh),
                     )
 
                     Spacer(modifier = Modifier.width(12.dp))
@@ -111,7 +114,7 @@ fun FluxMiniPlayer(
                     // Title & Artist
                     Column(
                         modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Text(
                             text = track.title,
@@ -119,7 +122,7 @@ fun FluxMiniPlayer(
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
@@ -128,7 +131,7 @@ fun FluxMiniPlayer(
                             color = fluxColors.textMuted,
                             fontSize = 11.sp,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
 
@@ -140,22 +143,23 @@ fun FluxMiniPlayer(
                             CircularProgressIndicator(
                                 modifier = Modifier.size(34.dp),
                                 strokeWidth = 2.5.dp,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
                             )
                         }
                         IconButton(
                             onClick = onPlayPause,
-                            modifier = Modifier
-                                .size(38.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary)
-                                .testTag("mini_player_play_pause")
+                            modifier =
+                                Modifier
+                                    .size(38.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .testTag("mini_player_play_pause"),
                         ) {
                             Icon(
                                 imageVector = if (playerState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (playerState.isPlaying) "Pause" else "Play",
                                 tint = fluxColors.onPrimaryText,
-                                modifier = Modifier.size(22.dp)
+                                modifier = Modifier.size(22.dp),
                             )
                         }
                     }
@@ -165,15 +169,16 @@ fun FluxMiniPlayer(
                     // Next button
                     IconButton(
                         onClick = onNext,
-                        modifier = Modifier
-                            .size(38.dp)
-                            .testTag("mini_player_next")
+                        modifier =
+                            Modifier
+                                .size(38.dp)
+                                .testTag("mini_player_next"),
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipNext,
                             contentDescription = "Next Track",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
                         )
                     }
                 }
