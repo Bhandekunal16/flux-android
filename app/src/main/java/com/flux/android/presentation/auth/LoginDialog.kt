@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -59,12 +60,18 @@ fun LoginDialog(
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
+        properties =
+            DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                decorFitsSystemWindows = false,
+            ),
     ) {
         Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .imePadding()
                     .clip(RoundedCornerShape(24.dp))
                     .background(if (fluxColors.isDark) Color(0xFF191224) else Color.White)
                     .padding(24.dp)

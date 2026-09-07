@@ -2,5 +2,7 @@
   "name": "Flux",
   "description": "Native Android YouTube-powered music and video discovery platform with audio streaming, trailer exploration, genres, and authenticated wishlist.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

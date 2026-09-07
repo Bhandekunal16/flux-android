@@ -138,10 +138,13 @@ fun FluxMiniPlayer(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     // Play/Pause Button
-                    Box(contentAlignment = Alignment.Center) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.size(48.dp),
+                    ) {
                         if (playerState.isBuffering) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(34.dp),
+                                modifier = Modifier.size(36.dp),
                                 strokeWidth = 2.5.dp,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -150,7 +153,7 @@ fun FluxMiniPlayer(
                             onClick = onPlayPause,
                             modifier =
                                 Modifier
-                                    .size(38.dp)
+                                    .size(44.dp)
                                     .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.primary)
                                     .testTag("mini_player_play_pause"),
@@ -159,7 +162,7 @@ fun FluxMiniPlayer(
                                 imageVector = if (playerState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (playerState.isPlaying) "Pause" else "Play",
                                 tint = fluxColors.onPrimaryText,
-                                modifier = Modifier.size(22.dp),
+                                modifier = Modifier.size(24.dp),
                             )
                         }
                     }
@@ -171,14 +174,14 @@ fun FluxMiniPlayer(
                         onClick = onNext,
                         modifier =
                             Modifier
-                                .size(38.dp)
+                                .size(48.dp)
                                 .testTag("mini_player_next"),
                     ) {
                         Icon(
                             imageVector = Icons.Default.SkipNext,
                             contentDescription = "Next Track",
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(26.dp),
                         )
                     }
                 }

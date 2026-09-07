@@ -6,32 +6,32 @@ import com.flux.android.domain.model.WishlistItem
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class AuthRequest(
     @Json(name = "email") val email: String,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class AuthResponse(
     @Json(name = "token") val token: String? = null,
     @Json(name = "message") val message: String? = null,
     @Json(name = "user") val user: UserDto? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class UserDto(
     @Json(name = "email") val email: String? = null,
     @Json(name = "id") val id: String? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class ThumbnailInfo(
     @Json(name = "url") val url: String? = null,
     @Json(name = "width") val width: Int? = null,
     @Json(name = "height") val height: Int? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class ThumbnailsDto(
     @Json(name = "default") val default: ThumbnailInfo? = null,
     @Json(name = "medium") val medium: ThumbnailInfo? = null,
@@ -42,7 +42,7 @@ data class ThumbnailsDto(
     fun bestUrl(): String? = maxres?.url ?: high?.url ?: medium?.url ?: default?.url ?: standard?.url
 }
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class SnippetDto(
     @Json(name = "title") val title: String? = null,
     @Json(name = "description") val description: String? = null,
@@ -51,17 +51,17 @@ data class SnippetDto(
     @Json(name = "thumbnails") val thumbnails: ThumbnailsDto? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class ContentDetailsDto(
     @Json(name = "duration") val duration: String? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class VideoIdDto(
     @Json(name = "videoId") val videoId: String? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class RawMediaItemDto(
     // Flat properties
     @Json(name = "id") val idRaw: Any? = null,
@@ -151,7 +151,7 @@ data class RawMediaItemDto(
         }
 }
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class MediaListResponse(
     @Json(name = "items") val items: List<RawMediaItemDto>? = null,
     @Json(name = "results") val results: List<RawMediaItemDto>? = null,
@@ -161,7 +161,7 @@ data class MediaListResponse(
     fun allItems(): List<RawMediaItemDto> = items ?: results ?: data ?: emptyList()
 }
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class StreamResponse(
     @Json(name = "url") val url: String? = null,
     @Json(name = "streamUrl") val streamUrl: String? = null,
@@ -171,7 +171,7 @@ data class StreamResponse(
     fun resolvedUrl(): String? = streamUrl ?: url ?: audioUrl ?: playableUrl
 }
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class WishlistRequest(
     @Json(name = "videoId") val videoId: String,
     @Json(name = "title") val title: String,
@@ -180,7 +180,7 @@ data class WishlistRequest(
     @Json(name = "duration") val duration: String? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class WishlistItemDto(
     @Json(name = "id") val id: String? = null,
     @Json(name = "_id") val mongoId: String? = null,
@@ -207,7 +207,7 @@ data class WishlistItemDto(
     }
 }
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class WishlistResponse(
     @Json(name = "items") val items: List<WishlistItemDto>? = null,
     @Json(name = "data") val data: List<WishlistItemDto>? = null,

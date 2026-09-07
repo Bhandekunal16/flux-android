@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
@@ -118,65 +118,67 @@ fun FluxMainNavigation(
         }
 
     Scaffold(
-        contentWindowInsets = WindowInsets.navigationBars,
+        contentWindowInsets = WindowInsets.safeDrawing,
         bottomBar = {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background),
-            ) {
-                // Persistent Mini Player above the Navigation Bar
-                FluxMiniPlayer(
-                    playerState = playerState,
-                    onPlayPause = { playerManager.togglePlayPause() },
-                    onNext = { playerManager.next() },
-                    onOpenFullPlayer = { playerManager.setFullPlayerVisible(true) },
-                )
-
-                // Bottom Navigation Bar
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.onBackground,
-                    tonalElevation = 0.dp,
+            if (!isSearchOpen) {
+                Column(
                     modifier =
-                        Modifier.border(
-                            width = 1.dp,
-                            color = fluxColors.border,
-                            shape = androidx.compose.ui.graphics.RectangleShape,
-                        ),
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background),
                 ) {
-                    NavigationTab.values().forEach { tab ->
-                        val isSelected = currentTab == tab && !isSearchOpen
-                        NavigationBarItem(
-                            selected = isSelected,
-                            onClick = {
-                                isSearchOpen = false
-                                currentTab = tab
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = if (isSelected) tab.selectedIcon else tab.unselectedIcon,
-                                    contentDescription = tab.title,
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = tab.title,
-                                    fontSize = 11.sp,
-                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                                )
-                            },
-                            colors =
-                                NavigationBarItemDefaults.colors(
-                                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                                    indicatorColor = fluxColors.surfaceHigh,
-                                    unselectedIconColor = fluxColors.textMuted,
-                                    unselectedTextColor = fluxColors.textMuted,
-                                ),
-                            modifier = Modifier.testTag(tab.testTag),
-                        )
+                    // Persistent Mini Player above the Navigation Bar
+                    FluxMiniPlayer(
+                        playerState = playerState,
+                        onPlayPause = { playerManager.togglePlayPause() },
+                        onNext = { playerManager.next() },
+                        onOpenFullPlayer = { playerManager.setFullPlayerVisible(true) },
+                    )
+
+                    // Bottom Navigation Bar
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        tonalElevation = 0.dp,
+                        modifier =
+                            Modifier.border(
+                                width = 1.dp,
+                                color = fluxColors.border,
+                                shape = androidx.compose.ui.graphics.RectangleShape,
+                            ),
+                    ) {
+                        NavigationTab.values().forEach { tab ->
+                            val isSelected = currentTab == tab && !isSearchOpen
+                            NavigationBarItem(
+                                selected = isSelected,
+                                onClick = {
+                                    isSearchOpen = false
+                                    currentTab = tab
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (isSelected) tab.selectedIcon else tab.unselectedIcon,
+                                        contentDescription = tab.title,
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = tab.title,
+                                        fontSize = 11.sp,
+                                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                                    )
+                                },
+                                colors =
+                                    NavigationBarItemDefaults.colors(
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                                        indicatorColor = fluxColors.surfaceHigh,
+                                        unselectedIconColor = fluxColors.textMuted,
+                                        unselectedTextColor = fluxColors.textMuted,
+                                    ),
+                                modifier = Modifier.testTag(tab.testTag),
+                            )
+                        }
                     }
                 }
             }

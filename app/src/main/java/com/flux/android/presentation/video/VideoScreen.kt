@@ -32,7 +32,7 @@ import com.flux.android.presentation.components.EmptyStateView
 import com.flux.android.presentation.components.ErrorStateView
 import com.flux.android.presentation.components.ShimmerGrid
 import com.flux.android.presentation.components.TrackCardGrid
-import com.flux.android.presentation.components.TrackCardList
+import com.flux.android.presentation.components.YouTubeVideoCard
 import com.flux.android.presentation.components.ViewModeToggle
 import com.flux.android.presentation.theme.LocalFluxColors
 
@@ -164,12 +164,12 @@ fun VideoScreen(
             else -> {
                 LazyColumn(
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 96.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     items(uiState.filteredVideos, key = { it.id }) { track ->
                         val isWishlisted = wishlistedTrackIds.contains(track.id)
-                        TrackCardList(
+                        YouTubeVideoCard(
                             track = track,
                             isWishlisted = isWishlisted,
                             onListen = { onListenAudio(track, uiState.filteredVideos) },
